@@ -102,7 +102,7 @@ const Properties = () => {
 
               <Select>
                 <SelectTrigger className="bg-white">
-                  <SelectValue placeholder="Budget Range" />
+                  <SelectValue placeholder="Price Range" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Budgets</SelectItem>

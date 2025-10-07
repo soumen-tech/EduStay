@@ -53,6 +53,11 @@ const Navbar = () => {
                 Owner Login
               </Button>
             </Link>
+            <Link to="/admin/login">
+              <Button variant="outline" size="sm">
+                Admin
+              </Button>
+            </Link>
             <Link to="/owner/list-property">
               <Button size="sm" className="bg-accent hover:bg-accent/90">
                 List Property
@@ -99,6 +104,11 @@ const Navbar = () => {
               <Link to="/owner/login" onClick={() => setMobileMenuOpen(false)}>
                 <Button variant="outline" size="sm" className="w-full">
                   Owner Login
+                </Button>
+              </Link>
+              <Link to="/admin/login" onClick={() => setMobileMenuOpen(false)}>
+                <Button variant="outline" size="sm" className="w-full">
+                  Admin
                 </Button>
               </Link>
               <Link to="/owner/list-property" onClick={() => setMobileMenuOpen(false)}>

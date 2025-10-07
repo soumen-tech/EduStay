@@ -85,7 +85,7 @@ const Index = () => {
 
                 <Select value={budget} onValueChange={setBudget}>
                   <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Budget Range" />
+                    <SelectValue placeholder="Price Range" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="3000-4000">₹3000-4000</SelectItem>

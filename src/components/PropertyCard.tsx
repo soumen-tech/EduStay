@@ -1,9 +1,12 @@
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Wifi, Utensils, Home, User } from "lucide-react";
+import { MapPin, Wifi, Utensils, Home, User, Heart } from "lucide-react";
+import { toast } from "sonner";
 
 interface PropertyCardProps {
+  id: number;
   image: string;
   name: string;
   price: number;
@@ -13,11 +16,15 @@ interface PropertyCardProps {
   owner: string;
 }
 
-const PropertyCard = ({ image, name, price, distance, type, facilities, owner }: PropertyCardProps) => {
+const PropertyCard = ({ id, image, name, price, distance, type, facilities, owner }: PropertyCardProps) => {
   const facilityIcons = {
     "Wi-Fi": Wifi,
     "Meals": Utensils,
     "Attached": Home,
+  };
+
+  const handleSave = () => {
+    toast.success("Property saved to favorites!");
   };
 
   return (
@@ -59,8 +66,15 @@ const PropertyCard = ({ image, name, price, distance, type, facilities, owner }:
         </p>
       </CardContent>
       <CardFooter className="p-4 pt-0 gap-2">
-        <Button variant="outline" className="flex-1">View Details</Button>
-        <Button className="flex-1 bg-accent hover:bg-accent/90">Contact Owner</Button>
+        <Button variant="outline" size="sm" onClick={handleSave} className="flex-1">
+          <Heart className="h-4 w-4 mr-2" />
+          Save
+        </Button>
+        <Link to={`/property/${id}`} className="flex-1">
+          <Button size="sm" className="w-full bg-accent hover:bg-accent/90">
+            View Details
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
@@ -10,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { SlidersHorizontal, X, Wifi, Utensils, Droplet, Shirt } from "lucide-react";
+import { SlidersHorizontal, X, Wifi, Utensils, Droplet, Shirt, ArrowLeft } from "lucide-react";
 import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
 import room3 from "@/assets/room3.jpg";
@@ -33,11 +34,14 @@ const Properties = () => {
   const [searchLocation, setSearchLocation] = useState("");
 
   const allProperties = [
-    { id: 1, image: room1, name: "Ghosh Residency PG", price: 4500, distance: "800m", type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mr. S. Ghosh", verified: true, rating: 4.5, gender: "Boys" },
-    { id: 2, image: room2, name: "Mitra Boys Hostel", price: 4000, distance: "1km", type: "Hostel", facilities: ["Wi-Fi"], owner: "Mrs. Mitra", verified: true, rating: 4.2, gender: "Boys" },
-    { id: 3, image: room3, name: "Saha Mess & Rooms", price: 5000, distance: "600m", type: "Room", facilities: ["Meals"], owner: "Mr. Saha", verified: false, rating: 3.8, gender: "Boys" },
-    { id: 4, image: room4, name: "AOT Comfort Stay", price: 4800, distance: "900m", type: "PG", facilities: ["Wi-Fi", "Laundry"], owner: "Mr. Roy", verified: true, rating: 4.7, gender: "Boys" },
-    { id: 5, image: room1, name: "Sunshine Girls PG", price: 4300, distance: "1.2km", type: "PG", facilities: ["Wi-Fi", "Meals", "Laundry"], owner: "Mrs. Sen", verified: true, rating: 4.6, gender: "Girls" }
+    { id: 1, image: room1, name: "Ghosh Residency PG", price: 4500, distance: "800m", type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mr. S. Ghosh", verified: true, rating: 4.5, gender: "Boys", savedCount: 42 },
+    { id: 2, image: room2, name: "Mitra Boys Hostel", price: 4000, distance: "1km", type: "Hostel", facilities: ["Wi-Fi"], owner: "Mrs. Mitra", verified: true, rating: 4.2, gender: "Boys", savedCount: 35 },
+    { id: 3, image: room3, name: "Saha Mess & Rooms", price: 5000, distance: "600m", type: "Mess", facilities: ["Meals"], owner: "Mr. Saha", verified: false, rating: 3.8, gender: "Both", savedCount: 58 },
+    { id: 4, image: room4, name: "AOT Comfort Stay", price: 4800, distance: "900m", type: "PG", facilities: ["Wi-Fi", "Laundry"], owner: "Mr. Roy", verified: true, rating: 4.7, gender: "Boys", savedCount: 29 },
+    { id: 5, image: room1, name: "Sunshine Girls PG", price: 4300, distance: "1.2km", type: "PG", facilities: ["Wi-Fi", "Meals", "Laundry"], owner: "Mrs. Sen", verified: true, rating: 4.6, gender: "Girls", savedCount: 67 },
+    { id: 6, image: room2, name: "Roy Co-Living Space", price: 5200, distance: "700m", type: "PG", facilities: ["Wi-Fi", "Meals", "Gym"], owner: "Mr. P. Roy", verified: true, rating: 4.8, gender: "Both", savedCount: 73 },
+    { id: 7, image: room3, name: "Sen Girls Hostel", price: 4300, distance: "1.5km", type: "Hostel", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. M. Sen", verified: true, rating: 4.4, gender: "Girls", savedCount: 51 },
+    { id: 8, image: room4, name: "Chakraborty Mess", price: 3500, distance: "1.1km", type: "Mess", facilities: ["Meals", "Laundry"], owner: "Mr. S. Chakraborty", verified: false, rating: 4.1, gender: "Boys", savedCount: 38 }
   ];
 
   const filteredProperties = allProperties.filter(prop => {
@@ -71,6 +75,16 @@ const Properties = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">
+        {/* Back Button */}
+        <div className="container mx-auto px-4 pt-6">
+          <Link to="/">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+
         <section className="gradient-hero text-white py-12">
           <div className="container mx-auto px-4">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">Available Properties</h1>

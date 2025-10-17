@@ -16,6 +16,9 @@ import ListProperty from "./pages/ListProperty";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import MapView from "./pages/MapView";
+import About from "./pages/About";
+import Privacy from "./pages/Privacy";
+import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +34,9 @@ const App = () => (
           <Route path="/properties" element={<Properties />} />
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/map" element={<MapView />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/feedback" element={<Feedback />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route path="/student/signup" element={<StudentSignup />} />
           <Route path="/student/dashboard" element={<StudentDashboard />} />

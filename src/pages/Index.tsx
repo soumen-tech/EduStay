@@ -11,6 +11,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
 import room3 from "@/assets/room3.jpg";
+import room4 from "@/assets/room4.jpg";
 
 const Index = () => {
   const [propertyType, setPropertyType] = useState("");
@@ -25,7 +26,10 @@ const Index = () => {
       distance: "800m",
       type: "PG",
       facilities: ["Wi-Fi", "Meals"],
-      owner: "Mr. S. Ghosh"
+      owner: "Mr. S. Ghosh",
+      rating: 4.5,
+      gender: "Boys",
+      savedCount: 42
     },
     {
       id: 2,
@@ -35,7 +39,10 @@ const Index = () => {
       distance: "1km",
       type: "Hostel",
       facilities: ["Wi-Fi"],
-      owner: "Mrs. Mitra"
+      owner: "Mrs. Mitra",
+      rating: 4.2,
+      gender: "Boys",
+      savedCount: 35
     },
     {
       id: 3,
@@ -45,7 +52,75 @@ const Index = () => {
       distance: "600m",
       type: "Mess",
       facilities: ["Meals", "Attached"],
-      owner: "Mr. Saha"
+      owner: "Mr. Saha",
+      rating: 4.7,
+      gender: "Both",
+      savedCount: 58
+    },
+    {
+      id: 4,
+      image: room1,
+      name: "Dutta Girls PG",
+      price: 4200,
+      distance: "1.2km",
+      type: "PG",
+      facilities: ["Wi-Fi", "Meals", "Attached"],
+      owner: "Mrs. R. Dutta",
+      rating: 4.6,
+      gender: "Girls",
+      savedCount: 67
+    },
+    {
+      id: 5,
+      image: room2,
+      name: "Banerjee Student Hostel",
+      price: 3800,
+      distance: "900m",
+      type: "Hostel",
+      facilities: ["Wi-Fi", "Laundry"],
+      owner: "Mr. A. Banerjee",
+      rating: 4.3,
+      gender: "Boys",
+      savedCount: 29
+    },
+    {
+      id: 6,
+      image: room3,
+      name: "Roy Co-Living Space",
+      price: 5200,
+      distance: "700m",
+      type: "PG",
+      facilities: ["Wi-Fi", "Meals", "Gym"],
+      owner: "Mr. P. Roy",
+      rating: 4.8,
+      gender: "Both",
+      savedCount: 73
+    },
+    {
+      id: 7,
+      image: room4,
+      name: "Sen Girls Hostel",
+      price: 4300,
+      distance: "1.5km",
+      type: "Hostel",
+      facilities: ["Wi-Fi", "Meals"],
+      owner: "Mrs. M. Sen",
+      rating: 4.4,
+      gender: "Girls",
+      savedCount: 51
+    },
+    {
+      id: 8,
+      image: room1,
+      name: "Chakraborty Mess",
+      price: 3500,
+      distance: "1.1km",
+      type: "Mess",
+      facilities: ["Meals", "Laundry"],
+      owner: "Mr. S. Chakraborty",
+      rating: 4.1,
+      gender: "Boys",
+      savedCount: 38
     }
   ];
 

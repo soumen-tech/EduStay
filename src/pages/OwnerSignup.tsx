@@ -23,6 +23,15 @@ const OwnerSignup = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-secondary to-background p-4">
       <div className="w-full max-w-md">
+        <Link to="/" className="absolute top-4 left-4">
+          <Button variant="ghost" size="sm">
+            <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back
+          </Button>
+        </Link>
+        
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
           <Building2 className="h-8 w-8 text-primary" />
           <span className="text-2xl font-bold">EduStay</span>

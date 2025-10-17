@@ -94,6 +94,16 @@ const PropertyDetails = () => {
       
       <main className="flex-1 bg-secondary">
         <div className="container mx-auto px-4 py-8">
+          {/* Back Button */}
+          <Link to="/properties">
+            <Button variant="ghost" size="sm" className="mb-4">
+              <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M15 19l-7-7 7-7"></path>
+              </svg>
+              Back to Properties
+            </Button>
+          </Link>
+          
           {/* Demo Badge */}
           <div className="mb-4">
             <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">

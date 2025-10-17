@@ -61,6 +61,15 @@ const OwnerDashboard = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8">
+        <Link to="/">
+          <Button variant="ghost" size="sm" className="mb-6">
+            <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Back to Home
+          </Button>
+        </Link>
+        
         <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold mb-2">Property Owner Dashboard</h1>

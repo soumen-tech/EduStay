@@ -17,7 +17,7 @@ const StudentSignup = () => {
     e.preventDefault();
     // Demo signup - no actual authentication
     toast.success("Account created successfully!");
-    navigate("/student/dashboard");
+    navigate("/student/profile");
   };
 
   return (
@@ -51,7 +51,7 @@ const StudentSignup = () => {
                 <Input
                   id="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Aishik Pramanik"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required

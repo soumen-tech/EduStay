@@ -17,7 +17,7 @@ const OwnerSignup = () => {
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
     toast.success("Account created successfully!");
-    navigate("/owner/dashboard");
+    navigate("/owner/profile");
   };
 
   return (
@@ -51,7 +51,7 @@ const OwnerSignup = () => {
                 <Input
                   id="name"
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Aishik Pramanik"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required

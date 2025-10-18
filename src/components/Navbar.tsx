@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Home, Building2, User, MapPin, Menu, X } from "lucide-react";
 import { useState } from "react";
+import HamburgerMenu from "@/components/HamburgerMenu";
 
 const Navbar = () => {
   const location = useLocation();
@@ -26,12 +27,6 @@ const Navbar = () => {
               <Button variant={isActive("/") ? "default" : "ghost"} size="sm">
                 <Home className="h-4 w-4 mr-2" />
                 Home
-              </Button>
-            </Link>
-            <Link to="/properties">
-              <Button variant={isActive("/properties") ? "default" : "ghost"} size="sm">
-                <Building2 className="h-4 w-4 mr-2" />
-                Properties
               </Button>
             </Link>
             <Link to="/map">
@@ -63,15 +58,18 @@ const Navbar = () => {
                 List Property
               </Button>
             </Link>
+            <HamburgerMenu />
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile Menu */}
+          <div className="md:hidden flex items-center gap-2">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+            <HamburgerMenu />
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -81,12 +79,6 @@ const Navbar = () => {
               <Button variant={isActive("/") ? "default" : "ghost"} size="sm" className="w-full justify-start">
                 <Home className="h-4 w-4 mr-2" />
                 Home
-              </Button>
-            </Link>
-            <Link to="/properties" onClick={() => setMobileMenuOpen(false)}>
-              <Button variant={isActive("/properties") ? "default" : "ghost"} size="sm" className="w-full justify-start">
-                <Building2 className="h-4 w-4 mr-2" />
-                Properties
               </Button>
             </Link>
             <Link to="/map" onClick={() => setMobileMenuOpen(false)}>

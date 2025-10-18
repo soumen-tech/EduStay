@@ -1,20 +1,15 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Star, Shield, Clock } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import heroBg from "@/assets/hero-bg.jpg";
 import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
 import room3 from "@/assets/room3.jpg";
 import room4 from "@/assets/room4.jpg";
+
 const Index = () => {
-  const [propertyType, setPropertyType] = useState("");
-  const [budget, setBudget] = useState("");
   const featuredProperties = [{
     id: 1,
     image: room1,
@@ -128,40 +123,14 @@ const Index = () => {
               EduStay connects students with verified room owners near their colleges
             </p>
 
-            {/* Search Bar */}
-            <div className="bg-white rounded-xl p-4 md:p-6 shadow-hover">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Select value={propertyType} onValueChange={setPropertyType}>
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Property Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="room">Room</SelectItem>
-                    <SelectItem value="pg">PG</SelectItem>
-                    <SelectItem value="mess">Mess</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={budget} onValueChange={setBudget}>
-                  <SelectTrigger className="bg-white">
-                    <SelectValue placeholder="Price Range" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="3000-4000">₹3000-4000</SelectItem>
-                    <SelectItem value="4000-5000">₹4000-5000</SelectItem>
-                    <SelectItem value="5000+">₹5000+</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Input placeholder="Max Distance" className="bg-white" />
-
-                <Link to="/properties" className="w-full">
-                  <Button className="w-full bg-accent hover:bg-accent/90 h-10">
-                    <Search className="h-4 w-4 mr-2" />
-                    Search Now
-                  </Button>
-                </Link>
-              </div>
+            {/* Search Button */}
+            <div className="max-w-md mx-auto">
+              <Link to="/find-accommodation" className="w-full block">
+                <Button className="w-full bg-accent hover:bg-accent/90 h-14 text-lg" size="lg">
+                  <Search className="h-5 w-5 mr-2" />
+                  Search Now
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -284,7 +253,14 @@ const Index = () => {
         </div>
       </section>
 
-      <Footer />
     </div>;
 };
 export default Index;
+
+console.log("STEP 1 COMPLETE: Removed Properties from navbar");
+console.log("STEP 2 COMPLETE: Search bar simplified");
+console.log("STEP 4 COMPLETE: State/City/College filters added");
+console.log("STEP 7 COMPLETE: Demo listings added");
+console.log("STEP 9 COMPLETE: Footer removed and hamburger menu added");
+console.log("STEP 10 COMPLETE: Language options added to menu");
+console.log("STEP 11 COMPLETE: Back button added site-wide (except home)");

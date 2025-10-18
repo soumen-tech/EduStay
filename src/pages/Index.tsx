@@ -12,134 +12,118 @@ import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
 import room3 from "@/assets/room3.jpg";
 import room4 from "@/assets/room4.jpg";
-
 const Index = () => {
   const [propertyType, setPropertyType] = useState("");
   const [budget, setBudget] = useState("");
-
-  const featuredProperties = [
-    {
-      id: 1,
-      image: room1,
-      name: "Ghosh Residency PG",
-      price: 4500,
-      distance: "800m",
-      type: "PG",
-      facilities: ["Wi-Fi", "Meals"],
-      owner: "Mr. S. Ghosh",
-      rating: 4.5,
-      gender: "Boys",
-      savedCount: 42
-    },
-    {
-      id: 2,
-      image: room2,
-      name: "Mitra Boys Hostel",
-      price: 4000,
-      distance: "1km",
-      type: "Hostel",
-      facilities: ["Wi-Fi"],
-      owner: "Mrs. Mitra",
-      rating: 4.2,
-      gender: "Boys",
-      savedCount: 35
-    },
-    {
-      id: 3,
-      image: room3,
-      name: "Saha Mess & Rooms",
-      price: 5000,
-      distance: "600m",
-      type: "Mess",
-      facilities: ["Meals", "Attached"],
-      owner: "Mr. Saha",
-      rating: 4.7,
-      gender: "Both",
-      savedCount: 58
-    },
-    {
-      id: 4,
-      image: room1,
-      name: "Dutta Girls PG",
-      price: 4200,
-      distance: "1.2km",
-      type: "PG",
-      facilities: ["Wi-Fi", "Meals", "Attached"],
-      owner: "Mrs. R. Dutta",
-      rating: 4.6,
-      gender: "Girls",
-      savedCount: 67
-    },
-    {
-      id: 5,
-      image: room2,
-      name: "Banerjee Student Hostel",
-      price: 3800,
-      distance: "900m",
-      type: "Hostel",
-      facilities: ["Wi-Fi", "Laundry"],
-      owner: "Mr. A. Banerjee",
-      rating: 4.3,
-      gender: "Boys",
-      savedCount: 29
-    },
-    {
-      id: 6,
-      image: room3,
-      name: "Roy Co-Living Space",
-      price: 5200,
-      distance: "700m",
-      type: "PG",
-      facilities: ["Wi-Fi", "Meals", "Gym"],
-      owner: "Mr. P. Roy",
-      rating: 4.8,
-      gender: "Both",
-      savedCount: 73
-    },
-    {
-      id: 7,
-      image: room4,
-      name: "Sen Girls Hostel",
-      price: 4300,
-      distance: "1.5km",
-      type: "Hostel",
-      facilities: ["Wi-Fi", "Meals"],
-      owner: "Mrs. M. Sen",
-      rating: 4.4,
-      gender: "Girls",
-      savedCount: 51
-    },
-    {
-      id: 8,
-      image: room1,
-      name: "Chakraborty Mess",
-      price: 3500,
-      distance: "1.1km",
-      type: "Mess",
-      facilities: ["Meals", "Laundry"],
-      owner: "Mr. S. Chakraborty",
-      rating: 4.1,
-      gender: "Boys",
-      savedCount: 38
-    }
-  ];
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  const featuredProperties = [{
+    id: 1,
+    image: room1,
+    name: "Ghosh Residency PG",
+    price: 4500,
+    distance: "800m",
+    type: "PG",
+    facilities: ["Wi-Fi", "Meals"],
+    owner: "Mr. S. Ghosh",
+    rating: 4.5,
+    gender: "Boys",
+    savedCount: 42
+  }, {
+    id: 2,
+    image: room2,
+    name: "Mitra Boys Hostel",
+    price: 4000,
+    distance: "1km",
+    type: "Hostel",
+    facilities: ["Wi-Fi"],
+    owner: "Mrs. Mitra",
+    rating: 4.2,
+    gender: "Boys",
+    savedCount: 35
+  }, {
+    id: 3,
+    image: room3,
+    name: "Saha Mess & Rooms",
+    price: 5000,
+    distance: "600m",
+    type: "Mess",
+    facilities: ["Meals", "Attached"],
+    owner: "Mr. Saha",
+    rating: 4.7,
+    gender: "Both",
+    savedCount: 58
+  }, {
+    id: 4,
+    image: room1,
+    name: "Dutta Girls PG",
+    price: 4200,
+    distance: "1.2km",
+    type: "PG",
+    facilities: ["Wi-Fi", "Meals", "Attached"],
+    owner: "Mrs. R. Dutta",
+    rating: 4.6,
+    gender: "Girls",
+    savedCount: 67
+  }, {
+    id: 5,
+    image: room2,
+    name: "Banerjee Student Hostel",
+    price: 3800,
+    distance: "900m",
+    type: "Hostel",
+    facilities: ["Wi-Fi", "Laundry"],
+    owner: "Mr. A. Banerjee",
+    rating: 4.3,
+    gender: "Boys",
+    savedCount: 29
+  }, {
+    id: 6,
+    image: room3,
+    name: "Roy Co-Living Space",
+    price: 5200,
+    distance: "700m",
+    type: "PG",
+    facilities: ["Wi-Fi", "Meals", "Gym"],
+    owner: "Mr. P. Roy",
+    rating: 4.8,
+    gender: "Both",
+    savedCount: 73
+  }, {
+    id: 7,
+    image: room4,
+    name: "Sen Girls Hostel",
+    price: 4300,
+    distance: "1.5km",
+    type: "Hostel",
+    facilities: ["Wi-Fi", "Meals"],
+    owner: "Mrs. M. Sen",
+    rating: 4.4,
+    gender: "Girls",
+    savedCount: 51
+  }, {
+    id: 8,
+    image: room1,
+    name: "Chakraborty Mess",
+    price: 3500,
+    distance: "1.1km",
+    type: "Mess",
+    facilities: ["Meals", "Laundry"],
+    owner: "Mr. S. Chakraborty",
+    rating: 4.1,
+    gender: "Boys",
+    savedCount: 38
+  }];
+  return <div className="min-h-screen flex flex-col">
       <Navbar />
       
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 gradient-hero opacity-90"></div>
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url(${heroBg})` }}
-        ></div>
+        <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{
+        backgroundImage: `url(${heroBg})`
+      }}></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in">
-              Find Your Perfect Stay Near Academy of Technology
-            </h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in"> Find Your Ideal Stay — PGs, Hostels & Mess Near You</h1>
             <p className="text-lg md:text-xl mb-8 opacity-90">
               EduStay connects students with verified room owners near their colleges
             </p>
@@ -229,9 +213,7 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {featuredProperties.map((property) => (
-              <PropertyCard key={property.id} {...property} />
-            ))}
+            {featuredProperties.map(property => <PropertyCard key={property.id} {...property} />)}
           </div>
 
           <div className="text-center">
@@ -254,9 +236,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-card rounded-lg p-6 shadow-card">
               <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                ))}
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-5 w-5 fill-accent text-accent" />)}
               </div>
               <p className="mb-4 text-muted-foreground">
                 "EduStay helped me find an affordable PG near AOT quickly."
@@ -266,9 +246,7 @@ const Index = () => {
 
             <div className="bg-card rounded-lg p-6 shadow-card">
               <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                ))}
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-5 w-5 fill-accent text-accent" />)}
               </div>
               <p className="mb-4 text-muted-foreground">
                 "Verified listings gave me confidence in booking."
@@ -278,9 +256,7 @@ const Index = () => {
 
             <div className="bg-card rounded-lg p-6 shadow-card">
               <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                ))}
+                {[...Array(5)].map((_, i) => <Star key={i} className="h-5 w-5 fill-accent text-accent" />)}
               </div>
               <p className="mb-4 text-muted-foreground">
                 "The interface is clean and easy to navigate."
@@ -309,8 +285,6 @@ const Index = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;

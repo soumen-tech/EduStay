@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -16,8 +16,17 @@ import room4 from "@/assets/room4.jpg";
 
 const PropertyDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [selectedDuration, setSelectedDuration] = useState("1year");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const handleBackClick = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
 
   // Demo property data
   const property = {
@@ -95,14 +104,12 @@ const PropertyDetails = () => {
       <main className="flex-1 bg-secondary">
         <div className="container mx-auto px-4 py-8">
           {/* Back Button */}
-          <Link to="/properties">
-            <Button variant="ghost" size="sm" className="mb-4">
-              <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M15 19l-7-7 7-7"></path>
-              </svg>
-              Back to Properties
-            </Button>
-          </Link>
+          <Button variant="ghost" size="sm" className="mb-4" onClick={handleBackClick}>
+            <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M15 19l-7-7 7-7"></path>
+            </svg>
+            Go back to Previous Page
+          </Button>
           
           {/* Demo Badge */}
           <div className="mb-4">

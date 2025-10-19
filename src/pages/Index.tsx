@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search, Star, Shield, Clock } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import heroBg from "@/assets/hero-bg.jpg";
 import room1 from "@/assets/room1.jpg";
@@ -113,9 +114,14 @@ const Index = () => {
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 overflow-hidden">
         <div className="absolute inset-0 gradient-hero opacity-90"></div>
-        <div className="absolute inset-0 bg-cover bg-center opacity-20" style={{
-        backgroundImage: `url(${heroBg})`
-      }}></div>
+        {/* Shimmer placeholder effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-muted via-background to-muted animate-pulse opacity-30"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-20 transition-opacity duration-700" 
+          style={{
+            backgroundImage: `url(${heroBg})`
+          }}
+        ></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center text-white">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 animate-fade-in"> Find Your Ideal Stay — PGs, Hostels & Mess Near You</h1>
@@ -252,6 +258,8 @@ const Index = () => {
           </Link>
         </div>
       </section>
+
+      <Footer />
 
     </div>;
 };

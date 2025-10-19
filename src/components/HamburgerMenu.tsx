@@ -55,6 +55,25 @@ const HamburgerMenu = () => {
             </div>
           </div>
 
+          {/* Support Section */}
+          <div>
+            <h3 className="font-semibold mb-3">Support</h3>
+            <div className="space-y-2">
+              <Link to="/support" className="block py-2 hover:text-primary transition-colors">
+                Customer Support
+              </Link>
+              <Link to="/student-support" className="block py-2 hover:text-primary transition-colors">
+                Student Support
+              </Link>
+              <Link to="/owner-support" className="block py-2 hover:text-primary transition-colors">
+                Landlord Support
+              </Link>
+              <Link to="/faq" className="block py-2 hover:text-primary transition-colors">
+                FAQ
+              </Link>
+            </div>
+          </div>
+
           {/* Language Selection */}
           <div>
             <h3 className="font-semibold mb-3 flex items-center gap-2">

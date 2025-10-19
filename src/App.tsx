@@ -22,6 +22,10 @@ import MapView from "./pages/MapView";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Feedback from "./pages/Feedback";
+import Support from "./pages/Support";
+import StudentSupport from "./pages/StudentSupport";
+import OwnerSupport from "./pages/OwnerSupport";
+import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +45,10 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/feedback" element={<Feedback />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/student-support" element={<StudentSupport />} />
+          <Route path="/owner-support" element={<OwnerSupport />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route path="/student/signup" element={<StudentSignup />} />
           <Route path="/student/profile" element={<StudentProfile />} />

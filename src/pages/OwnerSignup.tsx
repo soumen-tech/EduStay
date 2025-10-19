@@ -16,6 +16,10 @@ const OwnerSignup = () => {
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
+    // Demo signup - set session storage
+    localStorage.setItem("isOwnerLoggedIn", "true");
+    localStorage.setItem("userName", name || "Aishik Pramanik");
+    localStorage.setItem("userType", "owner");
     toast.success("Account created successfully!");
     navigate("/owner/profile");
   };

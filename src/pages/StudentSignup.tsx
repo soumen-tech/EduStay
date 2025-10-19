@@ -15,7 +15,10 @@ const StudentSignup = () => {
 
   const handleSignup = (e: React.FormEvent) => {
     e.preventDefault();
-    // Demo signup - no actual authentication
+    // Demo signup - set session storage
+    localStorage.setItem("isStudentLoggedIn", "true");
+    localStorage.setItem("userName", name || "Aishik Pramanik");
+    localStorage.setItem("userType", "student");
     toast.success("Account created successfully!");
     navigate("/student/profile");
   };

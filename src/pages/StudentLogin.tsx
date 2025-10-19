@@ -14,7 +14,10 @@ const StudentLogin = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Demo login - no actual authentication
+    // Demo login - set session storage
+    localStorage.setItem("isStudentLoggedIn", "true");
+    localStorage.setItem("userName", "Aishik Pramanik");
+    localStorage.setItem("userType", "student");
     toast.success("Welcome back, Student!");
     navigate("/student/dashboard");
   };

@@ -14,6 +14,10 @@ const OwnerLogin = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    // Demo login - set session storage
+    localStorage.setItem("isOwnerLoggedIn", "true");
+    localStorage.setItem("userName", "Aishik Pramanik");
+    localStorage.setItem("userType", "owner");
     toast.success("Welcome back, Property Owner!");
     navigate("/owner/dashboard");
   };

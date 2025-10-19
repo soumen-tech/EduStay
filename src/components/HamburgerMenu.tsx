@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X, Phone, Mail, MapPin, Globe } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, Phone, Mail, MapPin, Globe, User, LogOut, Bookmark, Home as HomeIcon, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -16,9 +18,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 const HamburgerMenu = () => {
   const [language, setLanguage] = useState("english");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userType, setUserType] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const studentLoggedIn = localStorage.getItem("isStudentLoggedIn") === "true";
+    const ownerLoggedIn = localStorage.getItem("isOwnerLoggedIn") === "true";
+    const name = localStorage.getItem("userName") || "";
+    const type = localStorage.getItem("userType") || "";
+    
+    setIsLoggedIn(studentLoggedIn || ownerLoggedIn);
+    setUserName(name);
+    setUserType(type);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isStudentLoggedIn");
+    localStorage.removeItem("isOwnerLoggedIn");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userType");
+    setIsLoggedIn(false);
+    toast.success("Logged out successfully!");
+    navigate("/");
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map(n => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   return (
     <Sheet>
@@ -28,11 +66,73 @@ const HamburgerMenu = () => {
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+      <SheetContent side="right" className="w-[300px] sm:w-[400px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Menu</SheetTitle>
         </SheetHeader>
         <div className="mt-6 space-y-6">
+          {/* User Account Section */}
+          {isLoggedIn && (
+            <>
+              <div className="bg-muted rounded-lg p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  <Avatar>
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {getInitials(userName)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">{userName}</p>
+                    <p className="text-xs text-muted-foreground capitalize">{userType}</p>
+                  </div>
+                </div>
+                <Separator className="my-3" />
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-sm mb-2">My Account</h3>
+                  <Link 
+                    to={userType === "student" ? "/student/profile" : "/owner/profile"} 
+                    className="flex items-center gap-2 py-2 hover:text-primary transition-colors"
+                  >
+                    <User className="h-4 w-4" />
+                    My Profile
+                  </Link>
+                  {userType === "student" && (
+                    <>
+                      <Link to="/saved-listings" className="flex items-center gap-2 py-2 hover:text-primary transition-colors">
+                        <Bookmark className="h-4 w-4" />
+                        Saved Listings
+                      </Link>
+                      <Link to="/student/dashboard" className="flex items-center gap-2 py-2 hover:text-primary transition-colors">
+                        <FileText className="h-4 w-4" />
+                        My Bookings
+                      </Link>
+                    </>
+                  )}
+                  {userType === "owner" && (
+                    <>
+                      <Link to="/owner/dashboard" className="flex items-center gap-2 py-2 hover:text-primary transition-colors">
+                        <HomeIcon className="h-4 w-4" />
+                        My Listings
+                      </Link>
+                      <Link to="/owner/list-property" className="flex items-center gap-2 py-2 hover:text-primary transition-colors">
+                        <FileText className="h-4 w-4" />
+                        Create Listing
+                      </Link>
+                    </>
+                  )}
+                  <button 
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 py-2 hover:text-destructive transition-colors w-full text-left"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </button>
+                </div>
+              </div>
+              <Separator />
+            </>
+          )}
+
           {/* Quick Links */}
           <div>
             <h3 className="font-semibold mb-3">Quick Links</h3>

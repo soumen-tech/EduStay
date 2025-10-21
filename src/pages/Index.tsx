@@ -142,8 +142,24 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Featured Properties */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Properties</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Discover the best student accommodations near Academy of Technology
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredProperties.map(property => <PropertyCard key={property.id} {...property} />)}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
-      <section className="py-16 bg-secondary">
+      <section className="py-16 bg-secondary animate-fade-in">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
@@ -173,30 +189,6 @@ const Index = () => {
                 Connect directly with verified property owners
               </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Properties */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Properties</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Discover the best student accommodations near Academy of Technology
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {featuredProperties.map(property => <PropertyCard key={property.id} {...property} />)}
-          </div>
-
-          <div className="text-center">
-            <Link to="/properties">
-              <Button size="lg" variant="outline">
-                View All Properties
-              </Button>
-            </Link>
           </div>
         </div>
       </section>

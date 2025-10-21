@@ -27,6 +27,7 @@ import StudentSupport from "./pages/StudentSupport";
 import OwnerSupport from "./pages/OwnerSupport";
 import FAQ from "./pages/FAQ";
 import SavedListings from "./pages/SavedListings";
+import PaymentFlow from "./pages/PaymentFlow";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -50,7 +51,8 @@ const App = () => (
           <Route path="/student-support" element={<StudentSupport />} />
           <Route path="/owner-support" element={<OwnerSupport />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/saved-listings" element={<SavedListings />} />
+        <Route path="/saved-listings" element={<SavedListings />} />
+        <Route path="/payment" element={<PaymentFlow />} />
           <Route path="/student/login" element={<StudentLogin />} />
           <Route path="/student/signup" element={<StudentSignup />} />
           <Route path="/student/profile" element={<StudentProfile />} />

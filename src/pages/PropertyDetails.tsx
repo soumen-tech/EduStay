@@ -108,7 +108,7 @@ const PropertyDetails = () => {
             <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
               <path d="M15 19l-7-7 7-7"></path>
             </svg>
-            Go back to Previous Page
+            Go back to Home
           </Button>
           
           {/* Demo Badge */}
@@ -341,7 +341,21 @@ const PropertyDetails = () => {
                     {Object.entries(property.durations).map(([key, plan]) => (
                       <div 
                         key={key}
-                        onClick={() => setSelectedDuration(key)}
+                        onClick={() => {
+                          setSelectedDuration(key);
+                          // Navigate to payment flow
+                          const bookingData = {
+                            propertyId: property.id,
+                            propertyName: property.name,
+                            propertyImage: property.images[0],
+                            owner: property.owner.name,
+                            rating: property.rating,
+                            duration: plan.label,
+                            monthlyPrice: plan.price,
+                            securityDeposit: plan.deposit
+                          };
+                          navigate('/payment', { state: { bookingData } });
+                        }}
                         className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                           selectedDuration === key ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
                         }`}
@@ -356,7 +370,7 @@ const PropertyDetails = () => {
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground mt-4 text-center">
-                    Effective monthly cost decreases with longer duration commitments
+                    Click any duration to proceed to payment • Effective monthly cost decreases with longer commitments
                   </p>
                 </CardContent>
               </Card>

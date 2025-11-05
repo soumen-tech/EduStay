@@ -293,7 +293,18 @@ const PaymentFlow = () => {
       <Navbar />
       
       <main className="flex-1 container mx-auto px-4 py-8">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-4">
+        <Button 
+          variant="ghost" 
+          onClick={() => {
+            const hasHistory = window.history.length > 1;
+            if (hasHistory) {
+              navigate(-1);
+            } else {
+              navigate('/');
+            }
+          }} 
+          className="mb-4"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Go back
         </Button>

@@ -114,7 +114,7 @@ const FindAccommodation = () => {
             <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
               <path d="M15 19l-7-7 7-7"></path>
             </svg>
-            Back
+            Go back to Home
           </Button>
         </Link>
 

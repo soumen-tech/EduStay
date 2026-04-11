@@ -4,10 +4,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, MapPin, Phone, Mail, Wifi, Utensils, Shirt, BookOpen, Wind, Check, Shield, Camera, AlertCircle, MessageSquare } from "lucide-react";
+import { Star, MapPin, Phone, Mail, Wifi, Utensils, Shirt, BookOpen, Wind, Check, Shield, Camera, AlertCircle, MessageSquare, Leaf, ArrowLeft, Calendar } from "lucide-react";
 import { toast } from "sonner";
 import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
@@ -28,7 +27,6 @@ const PropertyDetails = () => {
     }
   };
 
-  // Demo property data
   const property = {
     id: 1,
     name: "Ghosh Residency PG",
@@ -51,7 +49,7 @@ const PropertyDetails = () => {
     studyTable: true,
     balcony: true,
     images: [room1, room2, room3, room4],
-    specialities: "Spacious rooms with balcony offering scenic garden views. Quiet environment perfect for focused studies. Well-maintained property with regular housekeeping.",
+    specialities: "Designed for the modern professional seeking peace amidst urban chaos. Greenview Residency offers more than just a room; it provides a biophilic living experience. Every corner is curated with natural materials, high-performance acoustics, and abundant greenery to ensure your home remains a true restorative sanctuary.",
     complimentary: ["Bedding & Pillows", "Study Lamp", "Wardrobe", "Water Purifier Access"],
     owner: {
       name: "Mr. S. Ghosh",
@@ -73,9 +71,9 @@ const PropertyDetails = () => {
       "4years": { price: 4000, deposit: 3500, label: "4 Years" }
     },
     reviews: [
-      { name: "Rahul M.", college: "AOT, 2nd Year", rating: 5, comment: "Excellent PG with great food and clean rooms. Owner is very cooperative.", date: "2 weeks ago", verified: true },
-      { name: "Ankit S.", college: "AOT, 3rd Year", rating: 4, comment: "Good place for students. Wifi speed is decent and study environment is quiet.", date: "1 month ago", verified: true },
-      { name: "Priyam D.", college: "AOT, Final Year", rating: 5, comment: "Stayed here for 2 years. Best PG near college with homely atmosphere.", date: "2 months ago", verified: true }
+      { name: "Rahul M.", college: "AOT, 2nd Year", rating: 5, comment: "The focus on light and air quality is noticeable. I've never slept better in the city. The community events are actually meaningful.", date: "2 weeks ago", verified: true },
+      { name: "Ankit S.", college: "AOT, 3rd Year", rating: 4, comment: "The glassmorphism design in the common areas is stunning. It feels like living in a premium boutique hotel but with the warmth of home.", date: "1 month ago", verified: true },
+      { name: "Priyam D.", college: "AOT, Final Year", rating: 5, comment: "Stayed here for 2 years. Best PG near college with homely atmosphere and excellent food.", date: "2 months ago", verified: true }
     ]
   };
 
@@ -97,470 +95,448 @@ const PropertyDetails = () => {
     setCurrentImageIndex((prev) => (prev - 1 + property.images.length) % property.images.length);
   };
 
+  const amenities = [
+    { icon: Wifi, label: "High-Speed WiFi", active: property.wifi },
+    { icon: Utensils, label: "Meals Included", active: property.meals },
+    { icon: Shirt, label: "Laundry Service", active: property.laundry },
+    { icon: BookOpen, label: "Study Table", active: property.studyTable },
+    { icon: Wind, label: "Balcony", active: property.balcony },
+    { icon: Check, label: "Attached Bath", active: property.attachedBathroom },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col surface">
       <Navbar />
       
-      <main className="flex-1 bg-secondary">
-        <div className="container mx-auto px-4 py-8">
-          {/* Back Button */}
-          <Button variant="ghost" size="sm" className="mb-4" onClick={handleBackClick}>
-            <svg className="h-4 w-4 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Go back to Home
-          </Button>
-          
+      <main className="flex-1">
+        {/* Breadcrumb */}
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center gap-2 text-sm font-body text-muted-foreground">
+            <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+            <span>/</span>
+            <Link to="/properties" className="hover:text-primary transition-colors">Neighborhoods</Link>
+            <span>/</span>
+            <span className="text-foreground font-medium">{property.name}</span>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 pb-12">
           {/* Demo Badge */}
           <div className="mb-4">
-            <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
-              ⚠️ Demo Content - Fictional Data
-            </Badge>
+            <span className="chip bg-amber-50 text-amber-700 text-xs px-3 py-1.5 rounded-full">
+              ⚠️ Demo Content — Fictional Data
+            </span>
           </div>
 
-          {/* Header Section */}
-          <div className="bg-background rounded-lg shadow-lg p-6 mb-6">
-            <div className="flex flex-col lg:flex-row justify-between items-start gap-4 mb-4">
-              <div className="flex-1">
-                <h1 className="text-3xl font-bold mb-2">{property.name}</h1>
-                <p className="text-muted-foreground mb-3">{property.tagline}</p>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {property.verified && (
-                    <Badge className="bg-green-600 hover:bg-green-700">
-                      <Shield className="h-3 w-3 mr-1" />
-                      EduStay Verified
-                    </Badge>
-                  )}
-                  {property.verifiedPhotos && (
-                    <Badge className="bg-blue-600 hover:bg-blue-700">
-                      <Camera className="h-3 w-3 mr-1" />
-                      Verified Photos
-                    </Badge>
-                  )}
-                  <Badge variant="secondary">Max Capacity: {property.maxCapacity}</Badge>
-                  <Badge variant="secondary">Gender: {property.gender}</Badge>
-                </div>
-
-                <div className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-1">
-                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    <span className="font-semibold">{property.rating}</span>
-                    <span className="text-muted-foreground">({property.reviewCount} reviews)</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{property.distance}</span>
-                  </div>
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
-                    <span>Saved by 87 users</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="bg-accent hover:bg-accent/90">
-                      Rent This Room
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Book {property.name}</DialogTitle>
-                      <DialogDescription>
-                        Complete your booking details (Demo Mode)
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium">Selected Duration</label>
-                        <p className="text-lg font-semibold text-primary">{currentPlan.label}</p>
-                        <p className="text-sm text-muted-foreground">₹{currentPlan.price}/month • Deposit: ₹{currentPlan.deposit}</p>
-                      </div>
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                        <div className="flex items-center gap-2 text-green-700 text-sm">
-                          <Shield className="h-4 w-4" />
-                          <span>Payment held in escrow • Released on check-in</span>
-                        </div>
-                      </div>
-                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
-                        <p className="text-sm text-amber-800">
-                          <strong>Cancellation Policy:</strong> Free cancellation up to 7 days before move-in. 
-                          See full terms for landlord cancellation rights.
-                        </p>
-                      </div>
-                      <Button onClick={handleBooking} className="w-full">
-                        Confirm Booking (Demo)
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-                <Button variant="outline" size="lg" onClick={handleMessage}>
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Message Owner
+          {/* ── Photo Gallery ── */}
+          <div className="glass-card rounded-2xl overflow-hidden mb-8">
+            <div className="relative">
+              <img 
+                src={property.images[currentImageIndex]} 
+                alt={`${property.name} - Photo ${currentImageIndex + 1}`}
+                className="w-full h-[400px] md:h-[500px] object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-between p-4">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={prevImage}
+                  className="rounded-full bg-white/60 backdrop-blur-sm hover:bg-white/80 h-10 w-10"
+                >
+                  ←
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={nextImage}
+                  className="rounded-full bg-white/60 backdrop-blur-sm hover:bg-white/80 h-10 w-10"
+                >
+                  →
                 </Button>
               </div>
+              <div className="absolute bottom-4 right-4">
+                <span className="chip bg-black/50 text-white backdrop-blur-sm rounded-full px-3 py-1 text-xs">
+                  {currentImageIndex + 1} / {property.images.length}
+                </span>
+              </div>
+              {/* Verified badges */}
+              <div className="absolute top-4 left-4 flex gap-2">
+                {property.verified && (
+                  <span className="chip bg-primary text-white rounded-full px-3 py-1 text-xs flex items-center gap-1">
+                    <Shield className="h-3 w-3" /> Verified
+                  </span>
+                )}
+                {property.verifiedPhotos && (
+                  <span className="chip bg-white/80 backdrop-blur-sm text-foreground rounded-full px-3 py-1 text-xs flex items-center gap-1">
+                    <Camera className="h-3 w-3" /> Verified Photos
+                  </span>
+                )}
+              </div>
+            </div>
+            {/* Thumbnails */}
+            <div className="flex gap-2 p-4">
+              {property.images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentImageIndex(idx)}
+                  className={`flex-1 h-20 rounded-xl overflow-hidden transition-all duration-300 ${
+                    idx === currentImageIndex 
+                      ? 'ring-2 ring-primary ring-offset-2 scale-[0.97]' 
+                      : 'opacity-60 hover:opacity-100'
+                  }`}
+                >
+                  <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Photo Gallery */}
-          <Card className="mb-6">
-            <CardContent className="p-0">
-              <div className="relative">
-                <img 
-                  src={property.images[currentImageIndex]} 
-                  alt={`${property.name} - Photo ${currentImageIndex + 1}`}
-                  className="w-full h-[400px] object-cover rounded-t-lg"
-                />
-                <div className="absolute inset-0 flex items-center justify-between p-4">
-                  <Button variant="outline" size="icon" onClick={prevImage} className="bg-white/80 hover:bg-white">
-                    ←
-                  </Button>
-                  <Button variant="outline" size="icon" onClick={nextImage} className="bg-white/80 hover:bg-white">
-                    →
-                  </Button>
-                </div>
-                <div className="absolute bottom-4 right-4">
-                  <Badge className="bg-black/60 text-white">
-                    {currentImageIndex + 1} / {property.images.length}
-                  </Badge>
-                </div>
-              </div>
-              <div className="grid grid-cols-4 gap-2 p-4">
-                {property.images.map((img, idx) => (
-                  <img 
-                    key={idx}
-                    src={img} 
-                    alt={`Thumbnail ${idx + 1}`}
-                    className={`h-20 object-cover rounded cursor-pointer border-2 ${
-                      idx === currentImageIndex ? 'border-primary' : 'border-transparent'
-                    }`}
-                    onClick={() => setCurrentImageIndex(idx)}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Room Details */}
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">Room Details & Amenities</h2>
-                  
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">Room Type</p>
-                        <p className="font-medium">{property.type}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">Furnishing</p>
-                        <p className="font-medium">{property.furnishing}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Check className="h-5 w-5 text-green-600" />
-                      <div>
-                        <p className="text-sm text-muted-foreground">Bed Type</p>
-                        <p className="font-medium">{property.bedType}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-6">
-                    {property.wifi && (
-                      <div className="flex items-center gap-2">
-                        <Wifi className="h-5 w-5 text-primary" />
-                        <span>High-Speed WiFi</span>
-                      </div>
-                    )}
-                    {property.meals && (
-                      <div className="flex items-center gap-2">
-                        <Utensils className="h-5 w-5 text-primary" />
-                        <span>Meals Included</span>
-                      </div>
-                    )}
-                    {property.laundry && (
-                      <div className="flex items-center gap-2">
-                        <Shirt className="h-5 w-5 text-primary" />
-                        <span>Laundry Service</span>
-                      </div>
-                    )}
-                    {property.studyTable && (
-                      <div className="flex items-center gap-2">
-                        <BookOpen className="h-5 w-5 text-primary" />
-                        <span>Study Table</span>
-                      </div>
-                    )}
-                    {property.balcony && (
-                      <div className="flex items-center gap-2">
-                        <Wind className="h-5 w-5 text-primary" />
-                        <span>Balcony</span>
-                      </div>
-                    )}
-                    {property.attachedBathroom && (
-                      <div className="flex items-center gap-2">
-                        <Check className="h-5 w-5 text-primary" />
-                        <span>Attached Bath</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="bg-secondary p-4 rounded-lg mb-4">
-                    <h3 className="font-semibold mb-2">Specialities</h3>
-                    <p className="text-muted-foreground">{property.specialities}</p>
-                  </div>
-
+          {/* ── Main Content Grid ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left: Main Content */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* Header */}
+              <div className="glass-card rounded-2xl p-7">
+                <div className="flex flex-col lg:flex-row justify-between items-start gap-4 mb-4">
                   <div>
-                    <h3 className="font-semibold mb-2">Complimentary Items</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {property.complimentary.map((item, idx) => (
-                        <Badge key={idx} variant="secondary">{item}</Badge>
-                      ))}
+                    <h1 className="text-3xl font-display font-bold text-foreground mb-2">{property.name}</h1>
+                    <p className="text-muted-foreground font-body mb-4">{property.tagline}</p>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="chip rounded-full">{property.type}</span>
+                      <span className="chip rounded-full">Max {property.maxCapacity}</span>
+                      <span className="chip rounded-full">{property.gender}</span>
+                    </div>
+                    <div className="flex items-center gap-5 flex-wrap text-sm font-body">
+                      <div className="flex items-center gap-1.5">
+                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                        <span className="font-semibold">{property.rating}</span>
+                        <span className="text-muted-foreground">({property.reviewCount} reviews)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 text-muted-foreground">
+                        <MapPin className="h-4 w-4 text-primary" />
+                        <span>{property.distance}</span>
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Rent Duration Options */}
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">Rent Duration & Pricing</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {Object.entries(property.durations).map(([key, plan]) => (
-                      <div 
-                        key={key}
-                        onClick={() => {
-                          setSelectedDuration(key);
-                          // Navigate to payment flow
-                          const bookingData = {
-                            propertyId: property.id,
-                            propertyName: property.name,
-                            propertyImage: property.images[0],
-                            owner: property.owner.name,
-                            rating: property.rating,
-                            duration: plan.label,
-                            monthlyPrice: plan.price,
-                            securityDeposit: plan.deposit
-                          };
-                          navigate('/payment', { state: { bookingData } });
-                        }}
-                        className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                          selectedDuration === key ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
-                        }`}
-                      >
-                        <div className="text-center">
-                          <p className="font-semibold text-lg mb-2">{plan.label}</p>
-                          <p className="text-3xl font-bold text-primary mb-1">₹{plan.price}</p>
-                          <p className="text-sm text-muted-foreground mb-2">per month</p>
-                          <p className="text-sm">Deposit: ₹{plan.deposit}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-4 text-center">
-                    Click any duration to proceed to payment • Effective monthly cost decreases with longer commitments
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Rules & Policies */}
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">House Rules</h2>
-                  <ul className="space-y-2">
-                    {property.rules.map((rule, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <AlertCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                        <span>{rule}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-sm text-muted-foreground mt-4 italic">
-                    For more information, contact the owner.
-                  </p>
-                </CardContent>
-              </Card>
-
-              {/* Reviews Section */}
-              <Card>
-                <CardContent className="p-6">
-                  <h2 className="text-2xl font-bold mb-4">Ratings & Reviews</h2>
-                  
-                  <div className="flex items-center gap-8 mb-6 p-4 bg-secondary rounded-lg">
-                    <div className="text-center">
-                      <p className="text-4xl font-bold text-primary">{property.rating}</p>
-                      <div className="flex gap-1 my-2">
-                        {[1,2,3,4,5].map((star) => (
-                          <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                      <p className="text-sm text-muted-foreground">{property.reviewCount} reviews</p>
-                    </div>
-                    
-                    <div className="flex-1 space-y-2">
-                      {[5,4,3,2,1].map((rating) => (
-                        <div key={rating} className="flex items-center gap-2">
-                          <span className="text-sm w-8">{rating}★</span>
-                          <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                            <div 
-                              className="h-full bg-yellow-400" 
-                              style={{ width: `${rating === 5 ? '60%' : rating === 4 ? '30%' : '10%'}` }}
-                            />
+                  <div className="flex gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button size="lg" className="rounded-full bg-primary text-white font-body hover-glow transition-all duration-300">
+                          Reserve Sanctuary
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md rounded-2xl">
+                        <DialogHeader>
+                          <DialogTitle className="font-display">Book {property.name}</DialogTitle>
+                          <DialogDescription className="font-body">
+                            Complete your booking details (Demo Mode)
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                          <div className="surface-low rounded-xl p-4">
+                            <p className="text-sm text-muted-foreground font-body">Selected Duration</p>
+                            <p className="text-lg font-display font-bold text-primary">{currentPlan.label}</p>
+                            <p className="text-sm text-muted-foreground font-body">₹{currentPlan.price}/month • Deposit: ₹{currentPlan.deposit}</p>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    {property.reviews.map((review, idx) => (
-                      <div key={idx} className="border-b pb-4 last:border-0">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <p className="font-semibold">{review.name}</p>
-                              {review.verified && (
-                                <Badge variant="secondary" className="text-xs">
-                                  <Shield className="h-3 w-3 mr-1" />
-                                  Verified
-                                </Badge>
-                              )}
+                          <div className="bg-primary/5 rounded-xl p-4">
+                            <div className="flex items-center gap-2 text-primary text-sm font-body">
+                              <Shield className="h-4 w-4" />
+                              <span>Payment held in escrow • Released on check-in</span>
                             </div>
-                            <p className="text-sm text-muted-foreground">{review.college}</p>
                           </div>
-                          <p className="text-sm text-muted-foreground">{review.date}</p>
+                          <p className="text-xs text-muted-foreground font-body text-center">
+                            You won't be charged yet. We'll contact you for a virtual tour.
+                          </p>
+                          <Button onClick={handleBooking} className="w-full rounded-full bg-primary hover-glow font-body">
+                            Confirm Booking (Demo)
+                          </Button>
                         </div>
-                        <div className="flex gap-1 mb-2">
-                          {[1,2,3,4,5].map((star) => (
-                            <Star 
-                              key={star} 
-                              className={`h-4 w-4 ${star <= review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'}`} 
-                            />
-                          ))}
-                        </div>
-                        <p className="text-muted-foreground">{review.comment}</p>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground mt-4 text-center">
-                    Only verified student accounts may post reviews
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Owner Info */}
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-4">Property Owner</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="font-semibold text-lg">{property.owner.name}</p>
-                      <p className="text-sm text-muted-foreground">{property.owner.address}</p>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Button variant="outline" className="w-full justify-start" onClick={handleMessage}>
-                        <Phone className="h-4 w-4 mr-2" />
-                        {property.owner.phone}
-                      </Button>
-                      <Button variant="outline" className="w-full justify-start" onClick={handleMessage}>
-                        <Mail className="h-4 w-4 mr-2" />
-                        Contact via Email
-                      </Button>
-                    </div>
-
-                    <Button variant="destructive" className="w-full mt-4" onClick={() => toast.info("Demo: Report feature")}>
-                      <AlertCircle className="h-4 w-4 mr-2" />
-                      Report Listing
+                      </DialogContent>
+                    </Dialog>
+                    <Button variant="ghost" size="lg" onClick={handleMessage} className="rounded-full hover:bg-accent font-body">
+                      <MessageSquare className="h-4 w-4 mr-2" />
+                      Message
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
 
-              {/* Safety & Helpline */}
-              <Card className="border-green-200 bg-green-50">
-                <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-4 text-green-900">Safety & Helpline</h3>
-                  
-                  <Tabs defaultValue="helpline" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="helpline">Helpline</TabsTrigger>
-                      <TabsTrigger value="emergency">Emergency</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="helpline" className="space-y-2 mt-4">
-                      <div className="bg-white p-3 rounded border">
-                        <p className="font-medium text-sm">Student Affairs Office</p>
-                        <Button variant="link" className="p-0 h-auto text-primary">
-                          <Phone className="h-3 w-3 mr-1" />
-                          +91 12345 67890
-                        </Button>
-                      </div>
-                      <div className="bg-white p-3 rounded border">
-                        <p className="font-medium text-sm">Local Police (Non-Emergency)</p>
-                        <Button variant="link" className="p-0 h-auto text-primary">
-                          <Phone className="h-3 w-3 mr-1" />
-                          +91 98765 43211
-                        </Button>
-                      </div>
-                      <div className="bg-white p-3 rounded border">
-                        <p className="font-medium text-sm">Platform Support</p>
-                        <Button variant="link" className="p-0 h-auto text-primary">
-                          support@edustay.com
-                        </Button>
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="emergency" className="space-y-2 mt-4">
-                      <Button variant="destructive" className="w-full justify-start" onClick={() => toast.error("Demo: Emergency call (100)")}>
-                        <Phone className="h-4 w-4 mr-2" />
-                        Emergency Police - 100
-                      </Button>
-                      <Button variant="destructive" className="w-full justify-start" onClick={() => toast.error("Demo: Emergency call (102)")}>
-                        <Phone className="h-4 w-4 mr-2" />
-                        Ambulance - 102
-                      </Button>
-                      <Button variant="destructive" className="w-full justify-start" onClick={() => toast.error("Demo: Emergency call (101)")}>
-                        <Phone className="h-4 w-4 mr-2" />
-                        Fire Brigade - 101
-                      </Button>
-                      <Button variant="outline" className="w-full mt-3" onClick={() => toast.success("Demo: Location shared")}>
-                        <MapPin className="h-4 w-4 mr-2" />
-                        Share Location
-                      </Button>
-                    </TabsContent>
-                  </Tabs>
-                </CardContent>
-              </Card>
+              {/* About this Sanctuary */}
+              <div className="glass-card rounded-2xl p-7">
+                <h2 className="text-2xl font-display font-bold mb-4">About this Sanctuary</h2>
+                <p className="text-muted-foreground font-body leading-relaxed mb-6">
+                  {property.specialities}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {property.complimentary.map((item, idx) => (
+                    <span key={idx} className="chip rounded-full text-xs">{item}</span>
+                  ))}
+                </div>
+              </div>
 
-              {/* Map Preview */}
-              <Card>
-                <CardContent className="p-0">
-                  <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <MapPin className="h-12 w-12 text-primary mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">Map Preview</p>
-                      <p className="text-xs text-muted-foreground">{property.distance}</p>
+              {/* World-Class Amenities */}
+              <div className="glass-card rounded-2xl p-7">
+                <h2 className="text-2xl font-display font-bold mb-6">World-Class Amenities</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {amenities.filter(a => a.active).map((amenity, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-4 surface-low rounded-xl">
+                      <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <amenity.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <span className="font-body text-sm font-medium text-foreground">{amenity.label}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                  <div className="flex items-center gap-3 p-4 surface-low rounded-xl">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <span className="font-body text-sm font-medium text-foreground">{property.furnishing}</span>
+                      <p className="text-xs text-muted-foreground">Room Type</p>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="flex items-center gap-3 p-4 surface-low rounded-xl">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <span className="font-body text-sm font-medium text-foreground">{property.bedType} Bed</span>
+                      <p className="text-xs text-muted-foreground">Bed Type</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Rent Duration & Pricing */}
+              <div className="glass-card rounded-2xl p-7">
+                <h2 className="text-2xl font-display font-bold mb-6">Duration & Pricing</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {Object.entries(property.durations).map(([key, plan]) => (
+                    <button
+                      key={key}
+                      onClick={() => {
+                        setSelectedDuration(key);
+                        const bookingData = {
+                          propertyId: property.id,
+                          propertyName: property.name,
+                          propertyImage: property.images[0],
+                          owner: property.owner.name,
+                          rating: property.rating,
+                          duration: plan.label,
+                          monthlyPrice: plan.price,
+                          securityDeposit: plan.deposit
+                        };
+                        navigate('/payment', { state: { bookingData } });
+                      }}
+                      className={`rounded-2xl p-5 text-center transition-all duration-300 ${
+                        selectedDuration === key
+                          ? 'bg-primary text-white shadow-lg scale-[1.02]'
+                          : 'surface-low hover:bg-accent'
+                      }`}
+                    >
+                      <p className="font-display font-semibold text-lg mb-2">{plan.label}</p>
+                      <p className={`text-3xl font-display font-bold mb-1 ${
+                        selectedDuration === key ? 'text-white' : 'text-primary'
+                      }`}>
+                        ₹{plan.price}
+                      </p>
+                      <p className={`text-sm mb-2 ${selectedDuration === key ? 'text-white/70' : 'text-muted-foreground'}`}>
+                        per month
+                      </p>
+                      <p className={`text-xs ${selectedDuration === key ? 'text-white/60' : 'text-muted-foreground'}`}>
+                        Deposit: ₹{plan.deposit}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-4 text-center font-body">
+                  Click any duration to proceed to payment • Monthly cost decreases with longer commitments
+                </p>
+              </div>
+
+              {/* House Rules */}
+              <div className="glass-card rounded-2xl p-7">
+                <h2 className="text-2xl font-display font-bold mb-5">House Rules</h2>
+                <div className="space-y-3">
+                  {property.rules.map((rule, idx) => (
+                    <div key={idx} className="flex items-start gap-3 p-3 surface-low rounded-xl">
+                      <AlertCircle className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="font-body text-sm text-foreground">{rule}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Resident Experiences */}
+              <div className="glass-card rounded-2xl p-7">
+                <h2 className="text-2xl font-display font-bold mb-6">Resident Experiences</h2>
+                
+                <div className="flex items-center gap-8 mb-8 surface-low rounded-2xl p-5">
+                  <div className="text-center">
+                    <p className="text-4xl font-display font-bold text-primary">{property.rating}</p>
+                    <div className="flex gap-0.5 my-2 justify-center">
+                      {[1,2,3,4,5].map((star) => (
+                        <Star key={star} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                      ))}
+                    </div>
+                    <p className="text-xs text-muted-foreground font-body">{property.reviewCount} reviews</p>
+                  </div>
+                  
+                  <div className="flex-1 space-y-1.5">
+                    {[5,4,3,2,1].map((rating) => (
+                      <div key={rating} className="flex items-center gap-2">
+                        <span className="text-xs w-6 text-muted-foreground">{rating}★</span>
+                        <div className="flex-1 h-1.5 bg-white rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-amber-400 rounded-full" 
+                            style={{ width: `${rating === 5 ? '60%' : rating === 4 ? '30%' : '10%'}` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {property.reviews.map((review, idx) => (
+                    <div key={idx} className="surface-low rounded-2xl p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-display font-semibold text-sm">{review.name}</p>
+                            {review.verified && (
+                              <span className="chip bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <Shield className="h-3 w-3" /> Verified
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-muted-foreground font-body">{review.college}</p>
+                        </div>
+                        <p className="text-xs text-muted-foreground font-body">{review.date}</p>
+                      </div>
+                      <div className="flex gap-0.5 mb-2">
+                        {[1,2,3,4,5].map((star) => (
+                          <Star 
+                            key={star} 
+                            className={`h-3.5 w-3.5 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} 
+                          />
+                        ))}
+                      </div>
+                      <p className="text-sm text-foreground font-body leading-relaxed italic">
+                        "{review.comment}"
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                
+                <p className="text-xs text-muted-foreground mt-5 text-center font-body">
+                  Only verified student accounts may post reviews
+                </p>
+              </div>
+            </div>
+
+            {/* ── Sidebar ── */}
+            <div className="space-y-6">
+              {/* Owner Info */}
+              <div className="glass-card rounded-2xl p-6">
+                <h3 className="font-display font-bold text-lg mb-4">Property Owner</h3>
+                <div className="space-y-4">
+                  <div>
+                    <p className="font-display font-semibold text-lg">{property.owner.name}</p>
+                    <p className="text-sm text-muted-foreground font-body">{property.owner.address}</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start rounded-xl hover:bg-accent font-body text-sm"
+                      onClick={handleMessage}
+                    >
+                      <Phone className="h-4 w-4 mr-2 text-primary" />
+                      {property.owner.phone}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start rounded-xl hover:bg-accent font-body text-sm"
+                      onClick={handleMessage}
+                    >
+                      <Mail className="h-4 w-4 mr-2 text-primary" />
+                      Contact via Email
+                    </Button>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="w-full rounded-xl font-body text-sm text-red-500 hover:bg-red-50 hover:text-red-600"
+                    onClick={() => toast.info("Demo: Report feature")}
+                  >
+                    <AlertCircle className="h-4 w-4 mr-2" />
+                    Report Listing
+                  </Button>
+                </div>
+              </div>
+
+              {/* Safety & Helpline */}
+              <div className="glass-card rounded-2xl p-6 bg-primary/5">
+                <h3 className="font-display font-bold text-lg mb-4 text-primary">Safety & Helpline</h3>
+                
+                <Tabs defaultValue="helpline" className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 rounded-xl bg-white/60">
+                    <TabsTrigger value="helpline" className="rounded-xl font-body text-xs">Helpline</TabsTrigger>
+                    <TabsTrigger value="emergency" className="rounded-xl font-body text-xs">Emergency</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="helpline" className="space-y-2 mt-4">
+                    {[
+                      { label: "Student Affairs Office", number: "+91 12345 67890" },
+                      { label: "Local Police (Non-Emergency)", number: "+91 98765 43211" },
+                      { label: "Platform Support", number: "support@edustay.com" },
+                    ].map((item, idx) => (
+                      <div key={idx} className="bg-white rounded-xl p-3">
+                        <p className="font-body text-xs font-medium text-foreground">{item.label}</p>
+                        <p className="text-xs text-primary font-body">{item.number}</p>
+                      </div>
+                    ))}
+                  </TabsContent>
+                  
+                  <TabsContent value="emergency" className="space-y-2 mt-4">
+                    {[
+                      { label: "Emergency Police", number: "100" },
+                      { label: "Ambulance", number: "102" },
+                      { label: "Fire Brigade", number: "101" },
+                    ].map((item, idx) => (
+                      <Button
+                        key={idx}
+                        variant="ghost"
+                        className="w-full justify-start rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-body text-sm"
+                        onClick={() => toast.error(`Demo: Emergency call (${item.number})`)}
+                      >
+                        <Phone className="h-4 w-4 mr-2" />
+                        {item.label} — {item.number}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full mt-2 rounded-xl font-body text-sm hover:bg-accent"
+                      onClick={() => toast.success("Demo: Location shared")}
+                    >
+                      <MapPin className="h-4 w-4 mr-2" />
+                      Share Location
+                    </Button>
+                  </TabsContent>
+                </Tabs>
+              </div>
+
+              {/* Map Preview */}
+              <div className="glass-card rounded-2xl overflow-hidden">
+                <div className="h-48 bg-gradient-to-br from-primary/5 to-accent/20 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="h-10 w-10 text-primary mx-auto mb-2" />
+                    <p className="text-sm font-display font-semibold text-foreground">Map Preview</p>
+                    <p className="text-xs text-muted-foreground font-body">{property.distance}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

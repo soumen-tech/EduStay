@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Wifi, Utensils, Home, User, Heart, Star, Check } from "lucide-react";
@@ -26,7 +25,6 @@ const PropertyCard = ({ id, image, name, price, distance, type, facilities, owne
   const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    // Check if property is saved in localStorage (for demo/guest mode)
     const savedProperties = JSON.parse(localStorage.getItem('savedProperties') || '[]');
     setIsSaved(savedProperties.includes(id));
   }, [id]);
@@ -35,7 +33,6 @@ const PropertyCard = ({ id, image, name, price, distance, type, facilities, owne
     e.preventDefault();
     e.stopPropagation();
 
-    // Check if user is logged in
     const isLoggedIn = localStorage.getItem('userSession') || localStorage.getItem('ownerSession');
     
     setIsAnimating(true);
@@ -44,7 +41,6 @@ const PropertyCard = ({ id, image, name, price, distance, type, facilities, owne
     const savedProperties = JSON.parse(localStorage.getItem('savedProperties') || '[]');
     
     if (!isSaved) {
-      // Save property
       const newSavedProperties = [...savedProperties, id];
       localStorage.setItem('savedProperties', JSON.stringify(newSavedProperties));
       setIsSaved(true);
@@ -60,7 +56,6 @@ const PropertyCard = ({ id, image, name, price, distance, type, facilities, owne
           action: {
             label: "Undo",
             onClick: () => {
-              // Undo save
               const filtered = savedProperties.filter((propId: number) => propId !== id);
               localStorage.setItem('savedProperties', JSON.stringify(filtered));
               setIsSaved(false);
@@ -71,14 +66,12 @@ const PropertyCard = ({ id, image, name, price, distance, type, facilities, owne
         }
       );
 
-      // Show tooltip for guest users
       if (!isLoggedIn) {
         setTimeout(() => {
           toast.info("Login to save permanently", { duration: 3000 });
         }, 500);
       }
     } else {
-      // Unsave property
       const filtered = savedProperties.filter((propId: number) => propId !== id);
       localStorage.setItem('savedProperties', JSON.stringify(filtered));
       setIsSaved(false);
@@ -87,93 +80,112 @@ const PropertyCard = ({ id, image, name, price, distance, type, facilities, owne
     }
   };
 
-  const facilityIcons = {
+  const facilityIcons: Record<string, typeof Wifi> = {
     "Wi-Fi": Wifi,
     "Meals": Utensils,
     "Attached": Home,
   };
 
   return (
-    <Card className="group overflow-hidden shadow-card hover:shadow-hover transition-all duration-300 hover:-translate-y-1">
-      <div className="relative h-48 overflow-hidden">
+    <div className="group glass-card rounded-2xl overflow-hidden hover-lift cursor-pointer">
+      {/* Image Section */}
+      <div className="relative h-52 overflow-hidden img-zoom">
         <img
           src={image}
           alt={name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          className="w-full h-full object-cover"
         />
-        <Badge className="absolute top-3 right-3 bg-primary">
-          {type}
-        </Badge>
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        {/* Type Badge */}
+        <div className="absolute top-3 right-3">
+          <span className="chip bg-white/90 text-foreground backdrop-blur-sm font-semibold text-xs px-3 py-1 rounded-full">
+            {type}
+          </span>
+        </div>
+
+        {/* Save Button */}
+        <button
+          onClick={handleSave}
+          className={`absolute top-3 left-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+            isSaved 
+              ? 'bg-red-500 text-white' 
+              : 'bg-white/80 backdrop-blur-sm text-foreground hover:bg-white'
+          } ${isAnimating ? 'scale-125' : 'scale-100'}`}
+        >
+          <Heart className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+        </button>
       </div>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold text-lg">{name}</h3>
-          <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium">{rating}</span>
+
+      {/* Content Section */}
+      <div className="p-5">
+        {/* Title + Rating */}
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-display font-semibold text-lg text-foreground leading-tight">
+            {name}
+          </h3>
+          <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+            <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+            <span className="text-sm font-semibold text-foreground">{rating}</span>
           </div>
         </div>
-        <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4" />
+
+        {/* Location + Gender */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+            <MapPin className="h-3.5 w-3.5 text-primary" />
             <span>{distance} from AOT</span>
           </div>
-          <Badge variant="outline" className="text-xs">{gender}</Badge>
+          <span className="chip text-xs">{gender}</span>
         </div>
-        <div className="flex flex-wrap gap-2 mb-3">
+
+        {/* Amenity Chips */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
           {facilities.map((facility) => {
-            const Icon = facilityIcons[facility as keyof typeof facilityIcons] || Home;
+            const Icon = facilityIcons[facility] || Home;
             return (
-              <div key={facility} className="flex items-center gap-1 text-xs bg-secondary px-2 py-1 rounded-full">
+              <span key={facility} className="chip flex items-center gap-1 text-xs">
                 <Icon className="h-3 w-3" />
-                <span>{facility}</span>
-              </div>
+                {facility}
+              </span>
             );
           })}
         </div>
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <User className="h-4 w-4" />
-            <span>Owner: {owner}</span>
+
+        {/* Owner + Saved */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <User className="h-3.5 w-3.5" />
+            <span>{owner}</span>
           </div>
           {currentSavedCount > 0 && (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Heart className="h-3 w-3" />
-              <span>{currentSavedCount} saved</span>
+              <span>{currentSavedCount}</span>
             </div>
           )}
         </div>
-        <p className="text-2xl font-bold text-primary">
-          ₹{price.toLocaleString()}
-          <span className="text-sm font-normal text-muted-foreground">/month</span>
-        </p>
-      </CardContent>
-      <CardFooter className="p-4 pt-0 gap-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleSave} 
-          className={`flex-1 transition-all duration-300 ${
-            isAnimating ? 'scale-110' : ''
-          } ${
-            isSaved ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100' : ''
-          }`}
-          style={{
-            animation: isAnimating ? 'pulse 0.6s ease-in-out' : 'none'
-          }}
-        >
-          <Heart className={`h-4 w-4 mr-2 transition-all duration-300 ${
-            isSaved ? 'fill-red-600' : ''
-          }`} />
-          {isSaved ? 'Saved' : 'Save'}
-        </Button>
-        <Link to={`/property/${id}`} className="flex-1">
-          <Button size="sm" className="w-full bg-accent hover:bg-accent/90">
-            View Details
+
+        {/* Price */}
+        <div className="mb-4">
+          <span className="text-2xl font-display font-bold text-primary">
+            ₹{price.toLocaleString()}
+          </span>
+          <span className="text-sm text-muted-foreground ml-1">/month</span>
+        </div>
+
+        {/* Actions */}
+        <Link to={`/property/${id}`} className="block">
+          <Button
+            size="sm"
+            className="w-full rounded-full bg-primary hover:bg-primary/90 text-white font-body hover-glow transition-all duration-300"
+          >
+            View Sanctuary
           </Button>
         </Link>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };
 

@@ -59,7 +59,8 @@ const Navbar = () => {
 
   const navLinks = [
     { label: "Discover", path: "/" },
-    { label: "Neighborhoods", path: "/properties" },
+    { label: "Neighborhoods", path: "/neighborhoods" },
+    { label: "Saved", path: "/saved-locations" },
     { label: "Services", path: "/find-accommodation" },
     { label: "Community", path: "/about" },
   ];

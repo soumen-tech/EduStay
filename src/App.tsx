@@ -20,6 +20,8 @@ import ListProperty from "./pages/ListProperty";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import MapView from "./pages/MapView";
+import NeighborhoodExplorer from "./pages/NeighborhoodExplorer";
+import SavedLocations from "./pages/SavedLocations";
 import About from "./pages/About";
 import Privacy from "./pages/Privacy";
 import Feedback from "./pages/Feedback";
@@ -43,6 +45,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/properties" element={<Properties />} />
+          <Route path="/neighborhoods" element={<NeighborhoodExplorer />} />
+          <Route path="/saved-locations" element={<SavedLocations />} />
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/find-accommodation" element={<FindAccommodation />} />
           <Route path="/map" element={<MapView />} />

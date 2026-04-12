@@ -1,74 +1,95 @@
-# Welcome to your Lovable project
+# EduStay - Find Your Urban Sanctuary
 
-## Project info
+EduStay helps students discover verified PGs, hostels, and accommodations near Academy of Technology. Experience biophilic living designed for the modern student.
 
-**URL**: https://lovable.dev/projects/36fbde4c-0ffb-4fb9-b210-d838a11a1b6c
+## Project Info
 
-## How can I edit this code?
+**Repository**: [https://github.com/soumen-tech/EduStay](https://github.com/soumen-tech/EduStay)
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+This project is built with:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/36fbde4c-0ffb-4fb9-b210-d838a11a1b6c) and start prompting.
+- **Vite** — Fast build tool and dev server
+- **React 18** — UI library
+- **TypeScript** — Type-safe JavaScript
+- **Tailwind CSS** — Utility-first CSS framework
+- **shadcn/ui** — Accessible UI components built on Radix UI
+- **Firebase** — Authentication & Firestore database
+- **React Router** — Client-side routing
+- **React Query** — Data fetching and caching
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- [Node.js](https://nodejs.org/) (v18 or later recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Installation
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Step 1: Clone the repository
+git clone https://github.com/soumen-tech/EduStay.git
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd EduStay
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Step 3: Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The app will be available at `http://localhost:8080`.
+
+## How to Edit This Code
+
+### Use your preferred IDE
+
+Clone this repo and push changes. The project uses standard Vite + React tooling, so any modern IDE will work well.
+
+### Edit directly on GitHub
 
 - Navigate to the desired file(s).
 - Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Make your changes and commit.
 
-**Use GitHub Codespaces**
+### Use GitHub Codespaces
 
-- Navigate to the main page of your repository.
+- Navigate to the main page of the repository.
 - Click on the "Code" button (green button) near the top right.
 - Select the "Codespaces" tab.
 - Click on "New codespace" to launch a new Codespace environment.
 - Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+## Firebase Setup
 
-This project is built with:
+This project uses Firebase for authentication and data storage. To configure Firebase:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
+2. Enable Authentication (Email/Password and Google Sign-In).
+3. Set up Cloud Firestore.
+4. Add your Firebase config to the project's environment.
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/36fbde4c-0ffb-4fb9-b210-d838a11a1b6c) and click on Share -> Publish.
+You can deploy this project using any static hosting provider:
 
-## Can I connect a custom domain to my Lovable project?
+- **Firebase Hosting** — `firebase deploy`
+- **Vercel** — Connect your GitHub repo
+- **Netlify** — Connect your GitHub repo
+- **GitHub Pages** — Build and deploy the `dist` folder
 
-Yes, you can!
+### Build for Production
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+```sh
+npm run build
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-# EduStay
+The output will be in the `dist/` directory.
+
+## License
+
+This project is private.

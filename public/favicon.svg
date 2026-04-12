@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- House outline -->
+  <path d="M32 6L4 30h8v26h36V30h8L32 6z" fill="none" stroke="#0D6B4B" stroke-width="4" stroke-linejoin="round"/>
+  <!-- Door -->
+  <rect x="24" y="38" width="16" height="18" rx="2" fill="none" stroke="#0D6B4B" stroke-width="3"/>
+  <!-- Graduation cap -->
+  <polygon points="32,8 18,16 32,24 46,16" fill="#C9A84C"/>
+  <line x1="46" y1="16" x2="46" y2="24" stroke="#C9A84C" stroke-width="2"/>
+  <circle cx="46" cy="25" r="1.5" fill="#C9A84C"/>
+</svg>

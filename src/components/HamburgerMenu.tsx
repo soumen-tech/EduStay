@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, Phone, Mail, MapPin, Globe, User, LogOut, Bookmark, Home as HomeIcon, FileText, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetContent,
@@ -18,33 +18,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const HamburgerMenu = () => {
   const [language, setLanguage] = useState("english");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [userType, setUserType] = useState("");
   const navigate = useNavigate();
+  const { currentUser, userProfile, logout } = useAuth();
 
-  useEffect(() => {
-    const studentLoggedIn = localStorage.getItem("isStudentLoggedIn") === "true";
-    const ownerLoggedIn = localStorage.getItem("isOwnerLoggedIn") === "true";
-    const name = localStorage.getItem("userName") || "";
-    const type = localStorage.getItem("userType") || "";
-    
-    setIsLoggedIn(studentLoggedIn || ownerLoggedIn);
-    setUserName(name);
-    setUserType(type);
-  }, []);
+  const isLoggedIn = !!currentUser;
+  const userName = userProfile?.displayName || currentUser?.displayName || "";
+  const userType = userProfile?.userType || "";
+  const photoURL = userProfile?.photoURL || currentUser?.photoURL || "";
 
-  const handleLogout = () => {
-    localStorage.removeItem("isStudentLoggedIn");
-    localStorage.removeItem("isOwnerLoggedIn");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("userType");
-    setIsLoggedIn(false);
-    toast.success("Logged out successfully!");
-    navigate("/");
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("Logged out successfully!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Failed to logout. Please try again.");
+      console.error("Logout error:", error);
+    }
   };
 
   const getInitials = (name: string) => {
@@ -81,8 +75,9 @@ const HamburgerMenu = () => {
             <div className="glass-card rounded-2xl p-5">
               <div className="flex items-center gap-3 mb-4">
                 <Avatar className="h-10 w-10">
+                  {photoURL && <AvatarImage src={photoURL} alt={userName} />}
                   <AvatarFallback className="bg-primary text-primary-foreground font-display font-semibold text-sm">
-                    {getInitials(userName)}
+                    {getInitials(userName || "U")}
                   </AvatarFallback>
                 </Avatar>
                 <div>

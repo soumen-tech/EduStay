@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import Index from "./pages/Index";
 import Properties from "./pages/Properties";
 import PropertyDetails from "./pages/PropertyDetails";
@@ -34,47 +35,50 @@ import PaymentFlow from "./pages/PaymentFlow";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "YOUR_API_KEY";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/neighborhoods" element={<NeighborhoodExplorer />} />
-          <Route path="/saved-locations" element={<SavedLocations />} />
-          <Route path="/property/:id" element={<PropertyDetails />} />
-          <Route path="/find-accommodation" element={<FindAccommodation />} />
-          <Route path="/map" element={<MapView />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/feedback" element={<Feedback />} />
-          <Route path="/support" element={<Support />} />
-          <Route path="/student-support" element={<StudentSupport />} />
-          <Route path="/owner-support" element={<OwnerSupport />} />
-          <Route path="/faq" element={<FAQ />} />
-        <Route path="/saved-listings" element={<SavedListings />} />
-        <Route path="/payment" element={<PaymentFlow />} />
-          <Route path="/student/login" element={<StudentLogin />} />
-          <Route path="/student/signup" element={<StudentSignup />} />
-          <Route path="/student/profile" element={<StudentProfile />} />
-          <Route path="/student/dashboard" element={<StudentDashboard />} />
-          <Route path="/owner/login" element={<OwnerLogin />} />
-          <Route path="/owner/signup" element={<OwnerSignup />} />
-          <Route path="/owner/profile" element={<OwnerProfile />} />
-          <Route path="/owner/dashboard" element={<OwnerDashboard />} />
-          <Route path="/owner/list-property" element={<ListProperty />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </AuthProvider>
-      </BrowserRouter>
+      <APIProvider apiKey={API_KEY} solutionChannel="gmp_mcp_codeassist_v0.1_github">
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/properties" element={<Properties />} />
+              <Route path="/neighborhoods" element={<NeighborhoodExplorer />} />
+              <Route path="/saved-locations" element={<SavedLocations />} />
+              <Route path="/property/:id" element={<PropertyDetails />} />
+              <Route path="/find-accommodation" element={<FindAccommodation />} />
+              <Route path="/map" element={<MapView />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/support" element={<Support />} />
+              <Route path="/student-support" element={<StudentSupport />} />
+              <Route path="/owner-support" element={<OwnerSupport />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/saved-listings" element={<SavedListings />} />
+              <Route path="/payment" element={<PaymentFlow />} />
+              <Route path="/student/login" element={<StudentLogin />} />
+              <Route path="/student/signup" element={<StudentSignup />} />
+              <Route path="/student/profile" element={<StudentProfile />} />
+              <Route path="/student/dashboard" element={<StudentDashboard />} />
+              <Route path="/owner/login" element={<OwnerLogin />} />
+              <Route path="/owner/signup" element={<OwnerSignup />} />
+              <Route path="/owner/profile" element={<OwnerProfile />} />
+              <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+              <Route path="/owner/list-property" element={<ListProperty />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </APIProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

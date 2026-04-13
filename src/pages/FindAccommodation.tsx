@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,36 +37,79 @@ const FindAccommodation = () => {
 
   // Extended demo listings with 20+ properties
   const allProperties = [
-    { id: 1, image: room1, name: "Ghosh Residency PG", price: 4500, distance: "800m", type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mr. S. Ghosh", rating: 4.5, gender: "Boys", savedCount: 42, verified: true, roomType: "Double" },
-    { id: 2, image: room2, name: "Mitra Boys Hostel", price: 4000, distance: "1km", type: "Hostel", facilities: ["Wi-Fi"], owner: "Mrs. Mitra", rating: 4.2, gender: "Boys", savedCount: 35, verified: true, roomType: "Shared" },
-    { id: 3, image: room3, name: "Saha Mess & Rooms", price: 5000, distance: "600m", type: "Mess", facilities: ["Meals", "Attached"], owner: "Mr. Saha", rating: 4.7, gender: "Both", savedCount: 58, verified: true, roomType: "Single" },
-    { id: 4, image: room1, name: "Dutta Girls PG", price: 4200, distance: "1.2km", type: "PG", facilities: ["Wi-Fi", "Meals", "Attached"], owner: "Mrs. R. Dutta", rating: 4.6, gender: "Girls", savedCount: 67, verified: true, roomType: "Double" },
-    { id: 5, image: room2, name: "Banerjee Student Hostel", price: 3800, distance: "900m", type: "Hostel", facilities: ["Wi-Fi", "Laundry"], owner: "Mr. A. Banerjee", rating: 4.3, gender: "Boys", savedCount: 29, verified: false, roomType: "Shared" },
-    { id: 6, image: room3, name: "Roy Co-Living Space", price: 5200, distance: "700m", type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mr. P. Roy", rating: 4.8, gender: "Both", savedCount: 73, verified: true, roomType: "Single" },
-    { id: 7, image: room4, name: "Sen Girls Hostel", price: 4300, distance: "1.5km", type: "Hostel", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. M. Sen", rating: 4.4, gender: "Girls", savedCount: 51, verified: true, roomType: "Double" },
-    { id: 8, image: room1, name: "Chakraborty Mess", price: 3500, distance: "1.1km", type: "Mess", facilities: ["Meals", "Laundry"], owner: "Mr. S. Chakraborty", rating: 4.1, gender: "Boys", savedCount: 38, verified: false, roomType: "Shared" },
-    { id: 9, image: room2, name: "Das Brothers PG", price: 4700, distance: "1.3km", type: "PG", facilities: ["Wi-Fi", "Attached"], owner: "Das Brothers", rating: 4.5, gender: "Boys", savedCount: 45, verified: true, roomType: "Double" },
-    { id: 10, image: room3, name: "Mukherjee Girls Residence", price: 4900, distance: "950m", type: "PG", facilities: ["Wi-Fi", "Meals", "Laundry"], owner: "Mrs. Mukherjee", rating: 4.7, gender: "Girls", savedCount: 62, verified: true, roomType: "Single" },
-    { id: 11, image: room4, name: "Bose Student Living", price: 3900, distance: "1.8km", type: "Hostel", facilities: ["Wi-Fi"], owner: "Mr. N. Bose", rating: 4.0, gender: "Both", savedCount: 33, verified: false, roomType: "Shared" },
-    { id: 12, image: room1, name: "Pal Family PG", price: 4400, distance: "650m", type: "PG", facilities: ["Meals", "Attached"], owner: "Pal Family", rating: 4.6, gender: "Girls", savedCount: 54, verified: true, roomType: "Double" },
-    { id: 13, image: room2, name: "Sharma Boys Mess", price: 3600, distance: "2km", type: "Mess", facilities: ["Meals"], owner: "Mr. K. Sharma", rating: 3.9, gender: "Boys", savedCount: 27, verified: false, roomType: "Shared" },
-    { id: 14, image: room3, name: "Modern Student Hub", price: 5500, distance: "500m", type: "PG", facilities: ["Wi-Fi", "Meals", "Laundry", "Attached"], owner: "Hub Management", rating: 4.9, gender: "Both", savedCount: 89, verified: true, roomType: "Single" },
-    { id: 15, image: room4, name: "Gupta Residency", price: 4100, distance: "1.4km", type: "Hostel", facilities: ["Wi-Fi", "Attached"], owner: "Mr. V. Gupta", rating: 4.3, gender: "Boys", savedCount: 41, verified: true, roomType: "Double" },
-    { id: 16, image: room1, name: "Singh Girls Hostel", price: 4600, distance: "850m", type: "Hostel", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. P. Singh", rating: 4.5, gender: "Girls", savedCount: 56, verified: true, roomType: "Shared" },
-    { id: 17, image: room2, name: "Verma Student Mess", price: 3400, distance: "1.7km", type: "Mess", facilities: ["Meals", "Laundry"], owner: "Mr. Verma", rating: 3.8, gender: "Boys", savedCount: 22, verified: false, roomType: "Shared" },
-    { id: 18, image: room3, name: "Agarwal Co-Ed PG", price: 4800, distance: "750m", type: "PG", facilities: ["Wi-Fi", "Attached"], owner: "Agarwal Family", rating: 4.6, gender: "Both", savedCount: 64, verified: true, roomType: "Double" },
-    { id: 19, image: room4, name: "Kumar Deluxe PG", price: 5300, distance: "600m", type: "PG", facilities: ["Wi-Fi", "Meals", "Attached", "Laundry"], owner: "Mr. R. Kumar", rating: 4.8, gender: "Boys", savedCount: 71, verified: true, roomType: "Single" },
-    { id: 20, image: room1, name: "Joshi Girls Residence", price: 4500, distance: "1.1km", type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. Joshi", rating: 4.4, gender: "Girls", savedCount: 48, verified: true, roomType: "Double" },
-    { id: 21, image: room2, name: "Patel Economy Hostel", price: 3300, distance: "2.2km", type: "Hostel", facilities: ["Wi-Fi"], owner: "Mr. H. Patel", rating: 3.7, gender: "Boys", savedCount: 19, verified: false, roomType: "Shared" },
-    { id: 22, image: room3, name: "Reddy Premium Living", price: 5800, distance: "450m", type: "PG", facilities: ["Wi-Fi", "Meals", "Attached", "Laundry"], owner: "Reddy Ventures", rating: 4.9, gender: "Both", savedCount: 95, verified: true, roomType: "Single" },
+    { id: 1, image: room1, name: "Ghosh Residency PG", price: 4500, distance: "800m", lat: 22.804, lng: 88.397, type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mr. S. Ghosh", rating: 4.5, gender: "Boys", savedCount: 42, verified: true, roomType: "Double" },
+    { id: 2, image: room2, name: "Mitra Boys Hostel", price: 4000, distance: "1km", lat: 22.805, lng: 88.405, type: "Hostel", facilities: ["Wi-Fi"], owner: "Mrs. Mitra", rating: 4.2, gender: "Boys", savedCount: 35, verified: true, roomType: "Shared" },
+    { id: 3, image: room3, name: "Saha Mess & Rooms", price: 5000, distance: "600m", lat: 22.795, lng: 88.395, type: "Mess", facilities: ["Meals", "Attached"], owner: "Mr. Saha", rating: 4.7, gender: "Both", savedCount: 58, verified: true, roomType: "Single" },
+    { id: 4, image: room1, name: "Dutta Girls PG", price: 4200, distance: "1.2km", lat: 22.798, lng: 88.408, type: "PG", facilities: ["Wi-Fi", "Meals", "Attached"], owner: "Mrs. R. Dutta", rating: 4.6, gender: "Girls", savedCount: 67, verified: true, roomType: "Double" },
+    { id: 5, image: room2, name: "Banerjee Student Hostel", price: 3800, distance: "900m", lat: 22.792, lng: 88.401, type: "Hostel", facilities: ["Wi-Fi", "Laundry"], owner: "Mr. A. Banerjee", rating: 4.3, gender: "Boys", savedCount: 29, verified: false, roomType: "Shared" },
+    { id: 6, image: room3, name: "Roy Co-Living Space", price: 5200, distance: "700m", lat: 22.803, lng: 88.397, type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mr. P. Roy", rating: 4.8, gender: "Both", savedCount: 73, verified: true, roomType: "Single" },
+    { id: 7, image: room4, name: "Sen Girls Hostel", price: 4300, distance: "1.5km", lat: 22.808, lng: 88.410, type: "Hostel", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. M. Sen", rating: 4.4, gender: "Girls", savedCount: 51, verified: true, roomType: "Double" },
+    { id: 8, image: room1, name: "Chakraborty Mess", price: 3500, distance: "1.1km", lat: 22.790, lng: 88.398, type: "Mess", facilities: ["Meals", "Laundry"], owner: "Mr. S. Chakraborty", rating: 4.1, gender: "Boys", savedCount: 38, verified: false, roomType: "Shared" },
+    { id: 9, image: room2, name: "Das Brothers PG", price: 4700, distance: "1.3km", lat: 22.809, lng: 88.392, type: "PG", facilities: ["Wi-Fi", "Attached"], owner: "Das Brothers", rating: 4.5, gender: "Boys", savedCount: 45, verified: true, roomType: "Double" },
+    { id: 10, image: room3, name: "Mukherjee Girls Residence", price: 4900, distance: "950m", lat: 22.801, lng: 88.390, type: "PG", facilities: ["Wi-Fi", "Meals", "Laundry"], owner: "Mrs. Mukherjee", rating: 4.7, gender: "Girls", savedCount: 62, verified: true, roomType: "Single" },
+    { id: 11, image: room4, name: "Bose Student Living", price: 3900, distance: "1.8km", lat: 22.812, lng: 88.415, type: "Hostel", facilities: ["Wi-Fi"], owner: "Mr. N. Bose", rating: 4.0, gender: "Both", savedCount: 33, verified: false, roomType: "Shared" },
+    { id: 12, image: room1, name: "Pal Family PG", price: 4400, distance: "650m", lat: 22.796, lng: 88.404, type: "PG", facilities: ["Meals", "Attached"], owner: "Pal Family", rating: 4.6, gender: "Girls", savedCount: 54, verified: true, roomType: "Double" },
+    { id: 13, image: room2, name: "Sharma Boys Mess", price: 3600, distance: "2km", lat: 22.815, lng: 88.388, type: "Mess", facilities: ["Meals"], owner: "Mr. K. Sharma", rating: 3.9, gender: "Boys", savedCount: 27, verified: false, roomType: "Shared" },
+    { id: 14, image: room3, name: "Modern Student Hub", price: 5500, distance: "500m", lat: 22.800, lng: 88.398, type: "PG", facilities: ["Wi-Fi", "Meals", "Laundry", "Attached"], owner: "Hub Management", rating: 4.9, gender: "Both", savedCount: 89, verified: true, roomType: "Single" },
+    { id: 15, image: room4, name: "Gupta Residency", price: 4100, distance: "1.4km", lat: 22.788, lng: 88.411, type: "Hostel", facilities: ["Wi-Fi", "Attached"], owner: "Mr. V. Gupta", rating: 4.3, gender: "Boys", savedCount: 41, verified: true, roomType: "Double" },
+    { id: 16, image: room1, name: "Singh Girls Hostel", price: 4600, distance: "850m", lat: 22.805, lng: 88.396, type: "Hostel", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. P. Singh", rating: 4.5, gender: "Girls", savedCount: 56, verified: true, roomType: "Shared" },
+    { id: 17, image: room2, name: "Verma Student Mess", price: 3400, distance: "1.7km", lat: 22.814, lng: 88.409, type: "Mess", facilities: ["Meals", "Laundry"], owner: "Mr. Verma", rating: 3.8, gender: "Boys", savedCount: 22, verified: false, roomType: "Shared" },
+    { id: 18, image: room3, name: "Agarwal Co-Ed PG", price: 4800, distance: "750m", lat: 22.798, lng: 88.395, type: "PG", facilities: ["Wi-Fi", "Attached"], owner: "Agarwal Family", rating: 4.6, gender: "Both", savedCount: 64, verified: true, roomType: "Double" },
+    { id: 19, image: room4, name: "Kumar Deluxe PG", price: 5300, distance: "600m", lat: 22.802, lng: 88.399, type: "PG", facilities: ["Wi-Fi", "Meals", "Attached", "Laundry"], owner: "Mr. R. Kumar", rating: 4.8, gender: "Boys", savedCount: 71, verified: true, roomType: "Single" },
+    { id: 20, image: room1, name: "Joshi Girls Residence", price: 4500, distance: "1.1km", lat: 22.791, lng: 88.406, type: "PG", facilities: ["Wi-Fi", "Meals"], owner: "Mrs. Joshi", rating: 4.4, gender: "Girls", savedCount: 48, verified: true, roomType: "Double" },
+    { id: 21, image: room2, name: "Patel Economy Hostel", price: 3300, distance: "2.2km", lat: 22.785, lng: 88.392, type: "Hostel", facilities: ["Wi-Fi"], owner: "Mr. H. Patel", rating: 3.7, gender: "Boys", savedCount: 19, verified: false, roomType: "Shared" },
+    { id: 22, image: room3, name: "Reddy Premium Living", price: 5800, distance: "450m", lat: 22.799, lng: 88.404, type: "PG", facilities: ["Wi-Fi", "Meals", "Attached", "Laundry"], owner: "Reddy Ventures", rating: 4.9, gender: "Both", savedCount: 95, verified: true, roomType: "Single" },
   ];
+
+  const [searchParams] = useSearchParams();
+  const targetLatStr = searchParams.get("lat");
+  const targetLngStr = searchParams.get("lng");
+  const targetLocationName = searchParams.get("location");
+  
+  const targetLat = targetLatStr ? parseFloat(targetLatStr) : null;
+  const targetLng = targetLngStr ? parseFloat(targetLngStr) : null;
+
+  const geometryLib = useMapsLibrary("geometry");
+  const [propertiesWithDistance, setPropertiesWithDistance] = useState(allProperties.map(p => ({ ...p, _rawDistance: parseFloat(p.distance.replace('km', '000').replace('m', '')) })));
+
+  useEffect(() => {
+    // If we have a target coordinate and Google Maps Geometry is loaded
+    if (geometryLib && targetLat && targetLng) {
+      const targetLatLng = new google.maps.LatLng(targetLat, targetLng);
+      const updatedProps = allProperties.map(p => {
+        if (p.lat && p.lng) {
+          const propLatLng = new google.maps.LatLng(p.lat, p.lng);
+          const distMeters = geometryLib.spherical.computeDistanceBetween(targetLatLng, propLatLng);
+          
+          let distString = "";
+          if (distMeters < 1000) {
+            distString = `${Math.round(distMeters)}m`;
+          } else {
+            distString = `${(distMeters / 1000).toFixed(1)}km (${Math.round(distMeters)}m)`;
+          }
+          
+          return { ...p, distance: distString, _rawDistance: distMeters };
+        }
+        return { ...p, _rawDistance: 999999 };
+      });
+      setPropertiesWithDistance(updatedProps);
+    } else {
+       // Reset to default
+       setPropertiesWithDistance(allProperties.map(p => ({ ...p, _rawDistance: parseFloat(p.distance.replace('km', '000').replace('m', '')) })));
+    }
+    
+    // Auto-search if location was passed in params
+    if (targetLocationName || (targetLat && targetLng)) {
+      setShowResults(true);
+    }
+  }, [geometryLib, targetLat, targetLng, targetLocationName]);
 
   const handleFind = () => {
     setShowResults(true);
     console.log("STEP 3 COMPLETE: Search results page with filters and Find button");
   };
 
-  const filteredProperties = allProperties.filter((property) => {
+  const filteredProperties = propertiesWithDistance.filter((property) => {
     // Price filter
     if (property.price < priceRange[0] || property.price > priceRange[1]) return false;
     
@@ -94,7 +138,7 @@ const FindAccommodation = () => {
       case "rating":
         return b.rating - a.rating;
       case "distance":
-        return parseFloat(a.distance) - parseFloat(b.distance);
+        return a._rawDistance - b._rawDistance;
       case "price-low":
         return a.price - b.price;
       case "price-high":
@@ -120,7 +164,9 @@ const FindAccommodation = () => {
 
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Find Accommodation</h1>
-          <p className="text-muted-foreground">Use filters to find your perfect stay near Academy of Technology</p>
+          <p className="text-muted-foreground">
+            {targetLocationName ? `Properties near ${targetLocationName}` : "Use filters to find your perfect stay near Academy of Technology"}
+          </p>
           <Badge variant="outline" className="mt-2">Demo Content — Fictional</Badge>
         </div>
 

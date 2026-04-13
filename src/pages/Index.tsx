@@ -8,6 +8,7 @@ import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
 import room3 from "@/assets/room3.jpg";
 import room4 from "@/assets/room4.jpg";
+import LocationSearchPopover from "@/components/LocationSearchPopover";
 import { useState } from "react";
 
 const Index = () => {
@@ -102,16 +103,11 @@ const Index = () => {
             {/* ── Multi-field Search Bar ── */}
             <div className="max-w-3xl mx-auto animate-float-up-delay-3">
               <div className="glass-card rounded-full flex items-center px-3 py-2 gap-0 shadow-float">
-                {/* Location — navigates to Neighborhood Explorer */}
-                <div
-                  className="flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15 cursor-pointer group/loc"
-                  onClick={() => navigate("/neighborhoods")}
-                >
-                  <MapPin className="h-4 w-4 text-primary flex-shrink-0 group-hover/loc:scale-110 transition-transform duration-200" />
-                  <span className="text-sm font-body text-muted-foreground group-hover/loc:text-foreground transition-colors duration-200">
-                    {searchLocation || "Enter Location"}
-                  </span>
-                </div>
+                {/* Location — navigates to Neighborhood Explorer or FindAccommodation */}
+                <LocationSearchPopover 
+                  currentLocation={searchLocation} 
+                  onLocationSelect={setSearchLocation} 
+                />
 
                 {/* Budget Range */}
                 <div className="flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15">

@@ -5,6 +5,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star, ArrowLeft } from "lucide-react";
+import { APIProvider, Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
+
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "YOUR_API_KEY";
 
 const MapView = () => {
   const locations = [
@@ -48,50 +51,30 @@ const MapView = () => {
         <section className="py-12">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Map Placeholder */}
+              {/* Google Map */}
               <div className="lg:col-span-2">
                 <Card className="shadow-hover">
-                  <CardContent className="p-0">
-                    <div className="h-[500px] bg-gradient-to-br from-primary/10 to-accent/10 rounded-lg flex items-center justify-center relative overflow-hidden">
-                      {/* Decorative map elements */}
-                      <div className="absolute inset-0 opacity-20">
-                        <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-primary rounded-full blur-3xl"></div>
-                        <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-accent rounded-full blur-3xl"></div>
-                      </div>
-                      
-                      <div className="text-center z-10">
-                        <MapPin className="h-16 w-16 text-primary mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Map View</h3>
-                        <p className="text-muted-foreground">
-                          Interactive map showing properties near Academy of Technology
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-2">
-                          (Static demo - Actual implementation would use Google Maps or Mapbox)
-                        </p>
-                      </div>
-
-                      {/* Demo markers */}
-                      {locations.map((location, index) => (
-                        <div
-                          key={location.id}
-                          className="absolute"
-                          style={{
-                            top: `${25 + index * 15}%`,
-                            left: `${30 + index * 12}%`,
-                          }}
-                        >
-                          <div className="relative group cursor-pointer">
-                            <MapPin className="h-8 w-8 text-accent drop-shadow-lg animate-bounce" style={{ animationDelay: `${index * 0.2}s` }} />
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block">
-                              <div className="bg-background border shadow-lg rounded-lg p-2 whitespace-nowrap">
-                                <p className="text-sm font-medium">{location.name}</p>
-                                <p className="text-xs text-muted-foreground">{location.distance} from AOT</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                  <CardContent className="p-0 h-[500px]">
+                    <APIProvider apiKey={API_KEY} solutionChannel="gmp_mcp_codeassist_v0.1_github">
+                      <Map
+                        defaultZoom={15}
+                        defaultCenter={{ lat: 22.800, lng: 88.402 }}
+                        mapId="DEMO_MAP_ID"
+                        gestureHandling="greedy"
+                        disableDefaultUI={false}
+                        className="w-full h-full rounded-lg"
+                      >
+                        {locations.map((location) => (
+                          <AdvancedMarker
+                            key={location.id}
+                            position={{ lat: location.lat, lng: location.lng }}
+                            title={location.name}
+                          >
+                            <Pin background="#16a34a" borderColor="#14532d" glyphColor="#14532d" />
+                          </AdvancedMarker>
+                        ))}
+                      </Map>
+                    </APIProvider>
                   </CardContent>
                 </Card>
               </div>

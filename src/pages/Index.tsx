@@ -10,18 +10,24 @@ import room3 from "@/assets/room3.jpg";
 import room4 from "@/assets/room4.jpg";
 import LocationSearchPopover from "@/components/LocationSearchPopover";
 import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Slider } from "@/components/ui/slider";
 
 const Index = () => {
   const navigate = useNavigate();
   const [searchLocation, setSearchLocation] = useState("");
-  const [budgetRange, setBudgetRange] = useState("");
-  const [pgType, setPgType] = useState("");
+  const [budgetRange, setBudgetRange] = useState<number[]>([3000, 10000]);
+  const [pgType, setPgType] = useState<string[]>([]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchLocation) params.set("location", searchLocation);
-    if (budgetRange) params.set("budget", budgetRange);
-    if (pgType) params.set("type", pgType);
+    if (budgetRange) {
+      params.set("minBudget", budgetRange[0].toString());
+      params.set("maxBudget", budgetRange[1].toString());
+    }
+    if (pgType.length > 0) params.set("gender", pgType.join(","));
     navigate(`/find-accommodation?${params.toString()}`);
   };
 
@@ -110,37 +116,74 @@ const Index = () => {
                 />
 
                 {/* Budget Range */}
-                <div className="flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15">
-                  <DollarSign className="h-4 w-4 text-primary flex-shrink-0" />
-                  <select
-                    value={budgetRange}
-                    onChange={(e) => setBudgetRange(e.target.value)}
-                    className="bg-transparent text-sm font-body text-foreground outline-none w-full appearance-none cursor-pointer"
-                  >
-                    <option value="" className="text-muted-foreground">Budget Range</option>
-                    <option value="0-3000">₹0 – ₹3,000</option>
-                    <option value="3000-5000">₹3,000 – ₹5,000</option>
-                    <option value="5000-8000">₹5,000 – ₹8,000</option>
-                    <option value="8000-15000">₹8,000 – ₹15,000</option>
-                    <option value="15000+">₹15,000+</option>
-                  </select>
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15 hover:bg-black/5 transition-colors group outline-none">
+                      <DollarSign className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
+                      <div className="flex flex-col items-start whitespace-nowrap">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground leading-none mb-1">Budget</span>
+                        <span className="text-sm font-medium text-foreground tracking-tight">
+                          ₹{budgetRange[0]} – ₹{budgetRange[1] === 20000 ? "20000+" : budgetRange[1]}
+                        </span>
+                      </div>
+                      <ChevronDown className="h-3 w-3 text-muted-foreground ml-auto opacity-50" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 p-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-border/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2" align="start" sideOffset={12}>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-display font-medium text-foreground">Select Budget</h4>
+                        <span className="text-sm font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                          ₹{budgetRange[0]} – ₹{budgetRange[1] === 20000 ? "20000+" : budgetRange[1]}
+                        </span>
+                      </div>
+                      <Slider
+                        value={budgetRange}
+                        onValueChange={setBudgetRange}
+                        min={1000}
+                        max={20000}
+                        step={500}
+                        className="py-4"
+                      />
+                      <div className="flex justify-between text-xs text-muted-foreground font-medium">
+                        <span>₹1,000</span>
+                        <span>₹20,000+</span>
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
 
                 {/* PG Type */}
-                <div className="flex items-center gap-2 flex-1 px-4 py-2">
-                  <Building className="h-4 w-4 text-primary flex-shrink-0" />
-                  <select
-                    value={pgType}
-                    onChange={(e) => setPgType(e.target.value)}
-                    className="bg-transparent text-sm font-body text-foreground outline-none w-full appearance-none cursor-pointer"
-                  >
-                    <option value="" className="text-muted-foreground">PG Type</option>
-                    <option value="PG">PG</option>
-                    <option value="Hostel">Hostel</option>
-                    <option value="Mess">Mess</option>
-                    <option value="Co-Living">Co-Living</option>
-                  </select>
-                </div>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="flex items-center gap-2 flex-1 px-4 py-2 hover:bg-black/5 transition-colors group outline-none overflow-hidden">
+                      <Building className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
+                      <div className="flex flex-col items-start whitespace-nowrap truncate">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground leading-none mb-1">PG Type</span>
+                        <span className="text-sm font-medium text-foreground tracking-tight truncate max-w-full">
+                          {pgType.length > 0 ? pgType.join(", ") : "Any Type"}
+                        </span>
+                      </div>
+                      <ChevronDown className="h-3 w-3 text-muted-foreground ml-auto opacity-50 flex-shrink-0" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-border/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2" align="start" sideOffset={12}>
+                    <div className="space-y-3">
+                      <h4 className="font-display font-medium text-foreground text-sm">Select Type</h4>
+                      <ToggleGroup type="multiple" value={pgType} onValueChange={setPgType} className="justify-start gap-2">
+                        <ToggleGroupItem value="Boys" aria-label="Toggle Boys" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
+                          Boys
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="Girls" aria-label="Toggle Girls" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
+                          Girls
+                        </ToggleGroupItem>
+                        <ToggleGroupItem value="Co-ed" aria-label="Toggle Co-ed" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
+                          Co-ed
+                        </ToggleGroupItem>
+                      </ToggleGroup>
+                    </div>
+                  </PopoverContent>
+                </Popover>
 
                 {/* Search Button */}
                 <Button

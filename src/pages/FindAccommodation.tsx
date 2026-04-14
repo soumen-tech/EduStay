@@ -15,11 +15,43 @@ import room1 from "@/assets/room1.jpg";
 import room2 from "@/assets/room2.jpg";
 import room3 from "@/assets/room3.jpg";
 import room4 from "@/assets/room4.jpg";
+import { LocationCombobox } from "@/components/LocationCombobox";
+import { useLocationAPIs, useDebounce } from "@/hooks/useLocationAPIs";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const FindAccommodation = () => {
-  const [state, setState] = useState("west-bengal");
-  const [city, setCity] = useState("adisaptagram");
-  const [college, setCollege] = useState("aot");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+  const [college, setCollege] = useState("");
+  const [instSearchQuery, setInstSearchQuery] = useState("");
+
+  const {
+    states, statesLoading,
+    cities, citiesLoading, fetchCities,
+    institutions, instLoading, fetchInstitutions
+  } = useLocationAPIs();
+
+  const debouncedInstQuery = useDebounce(instSearchQuery, 500);
+
+  useEffect(() => {
+    fetchCities(state);
+  }, [state]);
+
+  useEffect(() => {
+    fetchInstitutions(debouncedInstQuery, city);
+  }, [debouncedInstQuery, city]);
+
+  const handleStateChange = (value: string) => {
+    setState(value);
+    setCity("");
+    setCollege("");
+  };
+
+  const handleCityChange = (value: string) => {
+    setCity(value);
+    setCollege("");
+  };
   const [maxDistance, setMaxDistance] = useState([5]);
   const [roomType, setRoomType] = useState("");
   const [priceRange, setPriceRange] = useState([3000, 6000]);
@@ -104,9 +136,26 @@ const FindAccommodation = () => {
     }
   }, [geometryLib, targetLat, targetLng, targetLocationName]);
 
-  const handleFind = () => {
+  const handleFind = async () => {
     setShowResults(true);
-    console.log("STEP 3 COMPLETE: Search results page with filters and Find button");
+    
+    // Save to Firebase Database
+    try {
+      await addDoc(collection(db, "searches"), {
+        state,
+        city,
+        collegeOrOffice: college,
+        maxDistance: maxDistance[0],
+        roomType,
+        priceRange,
+        gender,
+        minRating,
+        timestamp: serverTimestamp(),
+      });
+      console.log("User search data successfully stored in database.");
+    } catch (error) {
+      console.error("Error saving user search to database:", error);
+    }
   };
 
   const filteredProperties = propertiesWithDistance.filter((property) => {
@@ -181,40 +230,47 @@ const FindAccommodation = () => {
             {/* State Filter */}
             <div className="space-y-2">
               <Label>State</Label>
-              <Select value={state} onValueChange={setState}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="west-bengal">West Bengal</SelectItem>
-                </SelectContent>
-              </Select>
+              <LocationCombobox
+                value={state}
+                onValueChange={handleStateChange}
+                items={states}
+                loading={statesLoading}
+                placeholder="Select State"
+                searchPlaceholder="Search state..."
+                emptyText="No state found."
+              />
             </div>
 
             {/* City Filter */}
             <div className="space-y-2">
               <Label>City</Label>
-              <Select value={city} onValueChange={setCity}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="adisaptagram">Adisaptagram</SelectItem>
-                </SelectContent>
-              </Select>
+              <LocationCombobox
+                value={city}
+                onValueChange={handleCityChange}
+                items={cities}
+                loading={citiesLoading}
+                disabled={!state}
+                placeholder="Select City"
+                searchPlaceholder="Search city..."
+                emptyText="No city found."
+              />
             </div>
 
-            {/* College Filter */}
+            {/* College/Office Filter */}
             <div className="space-y-2">
-              <Label>College</Label>
-              <Select value={college} onValueChange={setCollege}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="aot">Academy of Technology</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>College / Office</Label>
+              <LocationCombobox
+                value={college}
+                onValueChange={setCollege}
+                items={institutions}
+                loading={instLoading}
+                disabled={!city}
+                placeholder="Select Region"
+                searchPlaceholder="Search colleges or offices..."
+                emptyText="No locations found. Try typing."
+                onSearchChange={setInstSearchQuery}
+                filterLocal={false}
+              />
             </div>
 
             {/* Max Distance */}

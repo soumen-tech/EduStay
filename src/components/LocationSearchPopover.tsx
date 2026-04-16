@@ -18,11 +18,13 @@ interface SavedLocation {
 interface LocationProps {
   currentLocation: string;
   onLocationSelect: (location: string) => void;
+  preventNavigation?: boolean;
+  className?: string;
 }
 
 const DEFAULT_CENTER = { lat: 22.800, lng: 88.402 }; // Approximate AOT Region
 
-const LocationSearchPopover = ({ currentLocation, onLocationSelect }: LocationProps) => {
+const LocationSearchPopover = ({ currentLocation, onLocationSelect, preventNavigation = false, className }: LocationProps) => {
   const [open, setOpen] = useState(false);
   const [queryText, setQueryText] = useState("");
   const { currentUser } = useAuth();
@@ -134,13 +136,17 @@ const LocationSearchPopover = ({ currentLocation, onLocationSelect }: LocationPr
   const handleSelectSaved = (loc: SavedLocation) => {
     setOpen(false);
     onLocationSelect(loc.label);
-    navigate(`/find-accommodation?location=${encodeURIComponent(loc.label)}`);
+    if (!preventNavigation) {
+      navigate(`/find-accommodation?location=${encodeURIComponent(loc.label)}`);
+    }
   };
 
   const confirmLocation = () => {
     setOpen(false);
     onLocationSelect(pinAddress);
-    navigate(`/find-accommodation?lat=${mapCenter.lat}&lng=${mapCenter.lng}&location=${encodeURIComponent(pinAddress)}`);
+    if (!preventNavigation) {
+      navigate(`/find-accommodation?lat=${mapCenter.lat}&lng=${mapCenter.lng}&location=${encodeURIComponent(pinAddress)}`);
+    }
   };
 
   const handleCameraChanged = (ev: MapCameraChangedEvent) => {
@@ -159,7 +165,7 @@ const LocationSearchPopover = ({ currentLocation, onLocationSelect }: LocationPr
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15 cursor-pointer group/loc" role="button">
+        <div className={`flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15 cursor-pointer group/loc ${className || ''}`} role="button">
           <MapPin className="h-4 w-4 text-primary flex-shrink-0 group-hover/loc:scale-110 transition-transform duration-200" />
           <span className="text-sm font-body text-muted-foreground group-hover/loc:text-foreground transition-colors duration-200 line-clamp-1 text-left flex-1" style={{minWidth:"120px"}}>
             {currentLocation || "Location... (e.g. University)"}

@@ -18,7 +18,10 @@ const Index = () => {
   const navigate = useNavigate();
   const [searchLocation, setSearchLocation] = useState("");
   const [budgetRange, setBudgetRange] = useState<number[]>([3000, 10000]);
-  const [pgType, setPgType] = useState<string[]>([]);
+  const [pgType, setPgType] = useState<string>("");
+  const [searchStep, setSearchStep] = useState(1);
+  const [budgetOpen, setBudgetOpen] = useState(false);
+  const [typeOpen, setTypeOpen] = useState(false);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -27,7 +30,7 @@ const Index = () => {
       params.set("minBudget", budgetRange[0].toString());
       params.set("maxBudget", budgetRange[1].toString());
     }
-    if (pgType.length > 0) params.set("gender", pgType.join(","));
+    if (pgType) params.set("gender", pgType);
     navigate(`/find-accommodation?${params.toString()}`);
   };
 
@@ -107,91 +110,120 @@ const Index = () => {
             </p>
 
             {/* ── Multi-field Search Bar ── */}
-            <div className="max-w-3xl mx-auto animate-float-up-delay-3">
-              <div className="glass-card rounded-full flex items-center px-3 py-2 gap-0 shadow-float">
+            <div className="w-full flex justify-center animate-float-up-delay-3 px-4">
+              <div className="glass-card rounded-full inline-flex items-center shadow-float transition-all duration-500 ease-in-out h-[56px] p-1.5 overflow-hidden">
                 {/* Location — navigates to Neighborhood Explorer or FindAccommodation */}
-                <LocationSearchPopover 
-                  currentLocation={searchLocation} 
-                  onLocationSelect={setSearchLocation} 
-                />
+                <div className="w-[160px] md:w-[200px] h-full flex items-center shrink-0 border-r border-border/15 last:border-r-0">
+                  <LocationSearchPopover 
+                    currentLocation={searchLocation} 
+                    onLocationSelect={(loc) => {
+                      setSearchLocation(loc);
+                      setSearchStep(prev => Math.max(2, prev));
+                      setBudgetOpen(true);
+                    }}
+                    preventNavigation={true}
+                    className="!border-r-0 w-full h-full rounded-l-full justify-start hover:bg-black/5"
+                  />
+                </div>
 
                 {/* Budget Range */}
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 flex-1 px-4 py-2 border-r border-border/15 hover:bg-black/5 transition-colors group outline-none">
-                      <DollarSign className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
-                      <div className="flex flex-col items-start whitespace-nowrap">
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground leading-none mb-1">Budget</span>
-                        <span className="text-sm font-medium text-foreground tracking-tight">
-                          ₹{budgetRange[0]} – ₹{budgetRange[1] === 20000 ? "20000+" : budgetRange[1]}
-                        </span>
+                {searchStep >= 2 && (
+                  <Popover open={budgetOpen} onOpenChange={setBudgetOpen}>
+                    <PopoverTrigger asChild>
+                      <button className="flex items-center gap-2 w-[160px] md:w-[200px] h-full shrink-0 px-4 hover:bg-black/5 transition-colors group outline-none border-r border-border/15 last:border-r-0 animate-in fade-in slide-in-from-left-4 duration-500">
+                        <DollarSign className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
+                        <div className="flex flex-col items-start whitespace-nowrap overflow-hidden">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground leading-none mb-1">Budget</span>
+                          <span className="text-sm font-medium text-foreground tracking-tight truncate">
+                            ₹{budgetRange[0]} – ₹{budgetRange[1] === 20000 ? "20000+" : budgetRange[1]}
+                          </span>
+                        </div>
+                        <ChevronDown className="h-3 w-3 text-muted-foreground ml-auto opacity-50 flex-shrink-0" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-border/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2" align="start" sideOffset={12}>
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-display font-medium text-foreground">Select Budget</h4>
+                          <span className="text-sm font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                            ₹{budgetRange[0]} – ₹{budgetRange[1] === 20000 ? "20000+" : budgetRange[1]}
+                          </span>
+                        </div>
+                        <Slider
+                          value={budgetRange}
+                          onValueChange={setBudgetRange}
+                          min={1000}
+                          max={20000}
+                          step={500}
+                          className="py-4"
+                        />
+                        <div className="flex justify-between text-xs text-muted-foreground font-medium mb-2">
+                          <span>₹1,000</span>
+                          <span>₹20,000+</span>
+                        </div>
+                        <Button 
+                          onClick={() => {
+                            setSearchStep(prev => Math.max(3, prev));
+                            setBudgetOpen(false);
+                            setTimeout(() => setTypeOpen(true), 150); // Delay slightly for smoother chained opening
+                          }}
+                          className="w-full rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold shadow-md"
+                        >
+                          Continue
+                        </Button>
                       </div>
-                      <ChevronDown className="h-3 w-3 text-muted-foreground ml-auto opacity-50" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 p-5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-border/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2" align="start" sideOffset={12}>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-display font-medium text-foreground">Select Budget</h4>
-                        <span className="text-sm font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                          ₹{budgetRange[0]} – ₹{budgetRange[1] === 20000 ? "20000+" : budgetRange[1]}
-                        </span>
-                      </div>
-                      <Slider
-                        value={budgetRange}
-                        onValueChange={setBudgetRange}
-                        min={1000}
-                        max={20000}
-                        step={500}
-                        className="py-4"
-                      />
-                      <div className="flex justify-between text-xs text-muted-foreground font-medium">
-                        <span>₹1,000</span>
-                        <span>₹20,000+</span>
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </PopoverContent>
+                  </Popover>
+                )}
 
                 {/* PG Type */}
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 flex-1 px-4 py-2 hover:bg-black/5 transition-colors group outline-none overflow-hidden">
-                      <Building className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
-                      <div className="flex flex-col items-start whitespace-nowrap truncate">
-                        <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground leading-none mb-1">PG Type</span>
-                        <span className="text-sm font-medium text-foreground tracking-tight truncate max-w-full">
-                          {pgType.length > 0 ? pgType.join(", ") : "Any Type"}
-                        </span>
+                {searchStep >= 3 && (
+                  <Popover open={typeOpen} onOpenChange={setTypeOpen}>
+                    <PopoverTrigger asChild>
+                      <button className="flex items-center gap-2 w-[160px] md:w-[200px] h-full shrink-0 px-4 hover:bg-black/5 transition-colors group outline-none overflow-hidden border-r border-border/15 last:border-r-0 animate-in fade-in slide-in-from-left-4 duration-500">
+                        <Building className="h-4 w-4 text-primary flex-shrink-0 group-hover:scale-110 transition-transform" />
+                        <div className="flex flex-col items-start whitespace-nowrap truncate">
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground leading-none mb-1">PG Type</span>
+                          <span className="text-sm font-medium text-foreground tracking-tight truncate max-w-full">
+                            {pgType || "Any Type"}
+                          </span>
+                        </div>
+                        <ChevronDown className="h-3 w-3 text-muted-foreground ml-auto opacity-50 flex-shrink-0" />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-border/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2" align="start" sideOffset={12}>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h4 className="font-display font-medium text-foreground text-sm">Select Type</h4>
+                          {pgType && <span className="bg-primary/10 text-primary text-xs font-semibold px-2 py-0.5 rounded-full">1 Selected</span>}
+                        </div>
+                        <ToggleGroup type="single" value={pgType} onValueChange={(v) => { if(v) setPgType(v); }} className="justify-start gap-2">
+                          <ToggleGroupItem value="Boys" aria-label="Toggle Boys" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
+                            Boys
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="Girls" aria-label="Toggle Girls" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
+                            Girls
+                          </ToggleGroupItem>
+                          <ToggleGroupItem value="Co-ed" aria-label="Toggle Co-ed" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
+                            Co-ed
+                          </ToggleGroupItem>
+                        </ToggleGroup>
                       </div>
-                      <ChevronDown className="h-3 w-3 text-muted-foreground ml-auto opacity-50 flex-shrink-0" />
-                    </button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-4 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border-border/30 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2" align="start" sideOffset={12}>
-                    <div className="space-y-3">
-                      <h4 className="font-display font-medium text-foreground text-sm">Select Type</h4>
-                      <ToggleGroup type="multiple" value={pgType} onValueChange={setPgType} className="justify-start gap-2">
-                        <ToggleGroupItem value="Boys" aria-label="Toggle Boys" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
-                          Boys
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="Girls" aria-label="Toggle Girls" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
-                          Girls
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="Co-ed" aria-label="Toggle Co-ed" className="rounded-full px-4 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-transparent data-[state=off]:border-border/40 hover:bg-black/5 transition-all">
-                          Co-ed
-                        </ToggleGroupItem>
-                      </ToggleGroup>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </PopoverContent>
+                  </Popover>
+                )}
 
                 {/* Search Button */}
-                <Button
-                  onClick={handleSearch}
-                  className="rounded-full bg-primary hover:bg-primary/90 text-white font-body font-semibold text-sm px-6 py-2 hover-glow transition-all duration-300 flex-shrink-0"
-                >
-                  Search
-                </Button>
+                {searchStep >= 3 && (
+                  <div className="flex h-[calc(100%-8px)] items-center px-1 shrink-0 animate-in fade-in zoom-in-90 duration-500 min-w-[120px] justify-center mt-1">
+                    <Button
+                      onClick={handleSearch}
+                      className="rounded-full bg-primary hover:bg-primary/90 text-white font-body font-semibold text-sm px-6 h-full w-full mx-1 hover-glow transition-all duration-300"
+                    >
+                      Search
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

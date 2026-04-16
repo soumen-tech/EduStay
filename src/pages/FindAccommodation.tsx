@@ -21,6 +21,11 @@ import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const FindAccommodation = () => {
+  const [searchParams] = useSearchParams();
+  const initialMinBudget = searchParams.get("minBudget");
+  const initialMaxBudget = searchParams.get("maxBudget");
+  const initialGender = searchParams.get("gender");
+
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [college, setCollege] = useState("");
@@ -54,9 +59,12 @@ const FindAccommodation = () => {
   };
   const [maxDistance, setMaxDistance] = useState([5]);
   const [roomType, setRoomType] = useState("");
-  const [priceRange, setPriceRange] = useState([3000, 6000]);
+  const [priceRange, setPriceRange] = useState([
+    initialMinBudget ? parseInt(initialMinBudget) : 3000,
+    initialMaxBudget ? parseInt(initialMaxBudget) : 6000
+  ]);
   const [minRating, setMinRating] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(initialGender || "");
   const [sortBy, setSortBy] = useState("verified");
   const [showResults, setShowResults] = useState(false);
   
@@ -93,7 +101,6 @@ const FindAccommodation = () => {
     { id: 22, image: room3, name: "Reddy Premium Living", price: 5800, distance: "450m", lat: 22.799, lng: 88.404, type: "PG", facilities: ["Wi-Fi", "Meals", "Attached", "Laundry"], owner: "Reddy Ventures", rating: 4.9, gender: "Both", savedCount: 95, verified: true, roomType: "Single" },
   ];
 
-  const [searchParams] = useSearchParams();
   const targetLatStr = searchParams.get("lat");
   const targetLngStr = searchParams.get("lng");
   const targetLocationName = searchParams.get("location");

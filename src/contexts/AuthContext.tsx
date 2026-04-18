@@ -17,7 +17,7 @@ export interface UserProfile {
   uid: string;
   email: string;
   displayName: string;
-  userType: "student" | "owner" | "admin";
+  userType: "student" | "owner" | "admin" | "sub_owner";
   propertyName?: string;
   phone?: string;
   photoURL?: string;
@@ -34,10 +34,10 @@ interface AuthContextType {
     email: string,
     password: string,
     displayName: string,
-    userType: "student" | "owner",
+    userType: "student" | "owner" | "sub_owner",
     extras?: { propertyName?: string }
   ) => Promise<void>;
-  loginWithGoogle: (userType: "student" | "owner") => Promise<void>;
+  loginWithGoogle: (userType: "student" | "owner" | "sub_owner") => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -63,9 +63,15 @@ const syncToLocalStorage = (
   if (userType === "student") {
     localStorage.setItem("isStudentLoggedIn", "true");
     localStorage.removeItem("isOwnerLoggedIn");
+    localStorage.removeItem("isSubOwnerLoggedIn");
   } else if (userType === "owner") {
     localStorage.setItem("isOwnerLoggedIn", "true");
     localStorage.removeItem("isStudentLoggedIn");
+    localStorage.removeItem("isSubOwnerLoggedIn");
+  } else if (userType === "sub_owner") {
+    localStorage.setItem("isSubOwnerLoggedIn", "true");
+    localStorage.removeItem("isStudentLoggedIn");
+    localStorage.removeItem("isOwnerLoggedIn");
   }
 };
 
@@ -117,7 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const createUserProfile = async (
     user: User,
     displayName: string,
-    userType: "student" | "owner",
+    userType: "student" | "owner" | "sub_owner",
     extras?: { propertyName?: string }
   ) => {
     const profile: UserProfile = {
@@ -152,7 +158,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             uid: user.uid,
             email: user.email || "",
             displayName: user.displayName || user.email?.split("@")[0] || "User",
-            userType: (localStorage.getItem("userType") as "student" | "owner") || "student",
+            userType: (localStorage.getItem("userType") as "student" | "owner" | "sub_owner") || "student",
             phone: "",
             photoURL: user.photoURL || "",
             createdAt: null,
@@ -182,7 +188,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     email: string,
     password: string,
     displayName: string,
-    userType: "student" | "owner",
+    userType: "student" | "owner" | "sub_owner",
     extras?: { propertyName?: string }
   ) => {
     // Step 1: Create the Firebase Auth account (this is the critical step)
@@ -200,7 +206,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Login with Google
-  const loginWithGoogle = async (userType: "student" | "owner") => {
+  const loginWithGoogle = async (userType: "student" | "owner" | "sub_owner") => {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
 
@@ -223,6 +229,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUserProfile(null);
     localStorage.removeItem("isStudentLoggedIn");
     localStorage.removeItem("isOwnerLoggedIn");
+    localStorage.removeItem("isSubOwnerLoggedIn");
     localStorage.removeItem("userName");
     localStorage.removeItem("userType");
   };

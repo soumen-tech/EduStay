@@ -21,8 +21,8 @@ const OwnerLogin = () => {
     setIsLoading(true);
     try {
       await login(email, password);
-      toast.success("Welcome back, Property Owner!");
-      navigate("/owner/dashboard");
+      toast.success("Welcome back!");
+      navigate("/owner-dashboard");
     } catch (error: any) {
       const code = error?.code;
       if (code === "auth/user-not-found" || code === "auth/invalid-credential") {
@@ -44,8 +44,8 @@ const OwnerLogin = () => {
     setIsGoogleLoading(true);
     try {
       await loginWithGoogle("owner");
-      toast.success("Welcome back, Property Owner!");
-      navigate("/owner/dashboard");
+      toast.success("Welcome back!");
+      navigate("/owner-dashboard");
     } catch (error: any) {
       if (error?.code !== "auth/popup-closed-by-user") {
         toast.error("Google login failed. Please try again.");

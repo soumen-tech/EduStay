@@ -66,6 +66,8 @@ const LocationSearchPopover = ({ currentLocation, onLocationSelect, preventNavig
       const locs: SavedLocation[] = [];
       snapshot.forEach(doc => locs.push({ id: doc.id, ...doc.data() } as SavedLocation));
       setSavedLocations(locs);
+    }, (error) => {
+      console.error("Error fetching saved locations in popover:", error);
     });
     return () => unsubscribe();
   }, [currentUser]);

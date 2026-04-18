@@ -30,7 +30,7 @@ const OwnerSignup = () => {
     try {
       await signup(email, password, name, "owner", { propertyName });
       toast.success("Account created successfully!");
-      navigate("/owner/dashboard");
+      navigate("/owner-dashboard");
     } catch (error: any) {
       const code = error?.code;
       if (code === "auth/email-already-in-use") {
@@ -53,7 +53,7 @@ const OwnerSignup = () => {
     try {
       await loginWithGoogle("owner");
       toast.success("Account created successfully!");
-      navigate("/owner/dashboard");
+      navigate("/owner-dashboard");
     } catch (error: any) {
       if (error?.code !== "auth/popup-closed-by-user") {
         toast.error("Google sign-up failed. Please try again.");

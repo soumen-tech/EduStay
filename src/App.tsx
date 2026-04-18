@@ -17,6 +17,7 @@ import OwnerLogin from "./pages/OwnerLogin";
 import OwnerSignup from "./pages/OwnerSignup";
 import OwnerProfile from "./pages/OwnerProfile";
 import OwnerDashboard from "./pages/OwnerDashboard";
+import SubOwnerDashboard from "./pages/SubOwnerDashboard";
 import ListProperty from "./pages/ListProperty";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -24,6 +25,7 @@ import MapView from "./pages/MapView";
 import NeighborhoodExplorer from "./pages/NeighborhoodExplorer";
 import SavedLocations from "./pages/SavedLocations";
 import About from "./pages/About";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Privacy from "./pages/Privacy";
 import Feedback from "./pages/Feedback";
 import Support from "./pages/Support";
@@ -69,7 +71,16 @@ const App = () => (
               <Route path="/owner/login" element={<OwnerLogin />} />
               <Route path="/owner/signup" element={<OwnerSignup />} />
               <Route path="/owner/profile" element={<OwnerProfile />} />
-              <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+              <Route path="/owner-dashboard" element={
+                <ProtectedRoute allowedRoles={["owner"]}>
+                  <OwnerDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/subowner-dashboard" element={
+                <ProtectedRoute allowedRoles={["sub_owner"]}>
+                  <SubOwnerDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/owner/list-property" element={<ListProperty />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />

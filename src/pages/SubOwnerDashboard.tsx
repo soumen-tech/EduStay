@@ -1,29 +1,37 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, LogOut, Users, LayoutDashboard, HelpCircle, Activity } from "lucide-react";
+import { Building2, LogOut, Users, LayoutDashboard, HelpCircle, Activity, PlusCircle, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+import { OverviewTab } from "@/components/sub-owner/OverviewTab";
+import { PropertiesTab } from "@/components/sub-owner/PropertiesTab";
+import { AddPropertyTab } from "@/components/sub-owner/AddPropertyTab";
+import { TenantsTab } from "@/components/sub-owner/TenantsTab";
+
+export type TabType = "overview" | "properties" | "add_property" | "tenants";
+
 const SubOwnerDashboard = () => {
   const navigate = useNavigate();
   const { currentUser, userProfile, logout } = useAuth();
   
+  const [activeTab, setActiveTab] = useState<TabType>("overview");
   const [properties, setProperties] = useState<any[]>([]);
+  const [tenants, setTenants] = useState<any[]>([]); // We would fetch this similarly
 
   useEffect(() => {
     if (!currentUser) return;
 
-    // We assume properties collection has a sub_owner_id field
-    const q = query(
+    // Fetch properties assigned to sub owner
+    const qProps = query(
       collection(db, "properties"),
       where("sub_owner_id", "==", currentUser.uid)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+    const unsubProps = onSnapshot(qProps, (snapshot) => {
       const data = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -34,19 +42,38 @@ const SubOwnerDashboard = () => {
       toast.error("Failed to fetch assigned properties");
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubProps();
+    };
   }, [currentUser]);
 
   const handleLogout = async () => {
-    await logout();
-    toast.success("Logged out successfully");
-    navigate("/");
+    try {
+      await logout();
+      toast.success("Logged out successfully");
+      navigate("/");
+    } catch (e) {
+      toast.error("Failed to logout");
+    }
+  };
+
+  const NavItem = ({ tab, icon: Icon, label }: { tab: TabType, icon: any, label: string }) => {
+    const isActive = activeTab === tab;
+    return (
+      <button 
+        onClick={() => setActiveTab(tab)}
+        className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive ? 'bg-emerald-800 text-white' : 'text-slate-300 hover:text-white hover:bg-slate-800'}`}
+      >
+        <Icon className="h-5 w-5" />
+        {label}
+      </button>
+    );
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 border-r border-slate-800 text-slate-300 flex flex-col hidden md:flex">
+      <aside className="w-64 bg-slate-900 border-r border-slate-800 text-slate-300 flex flex-col hidden md:flex shrink-0">
         <div className="p-6">
           <Link to="/" className="flex items-center gap-2 text-white mb-8">
             <Building2 className="h-6 w-6 text-emerald-500" />
@@ -56,30 +83,22 @@ const SubOwnerDashboard = () => {
             Premium Tier
           </div>
           <nav className="space-y-2">
-            <Link to="#" className="flex items-center gap-3 px-3 py-2 rounded-md bg-slate-800 text-white">
-              <LayoutDashboard className="h-5 w-5" />
-              Overview
-            </Link>
-            <Link to="#" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 transition-colors">
-              <Activity className="h-5 w-5" />
-              Analytics
-            </Link>
-            <Link to="#" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 transition-colors">
-              <Building2 className="h-5 w-5" />
-              Property Hub
-            </Link>
-            <Link to="#" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-slate-800 transition-colors">
-              <Users className="h-5 w-5" />
-              Tenant Registry
-            </Link>
+            <NavItem tab="overview" icon={LayoutDashboard} label="Dashboard" />
+            <NavItem tab="properties" icon={Building2} label="My Properties" />
+            <NavItem tab="add_property" icon={PlusCircle} label="Add Property" />
+            <NavItem tab="tenants" icon={Users} label="Tenants" />
           </nav>
         </div>
         <div className="mt-auto p-6 space-y-2">
-          <Button variant="ghost" className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800">
+          <Button variant="ghost" className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800" disabled>
+            <Settings className="h-5 w-5 mr-3" />
+            Settings
+          </Button>
+          <Button variant="ghost" className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800" disabled>
             <HelpCircle className="h-5 w-5 mr-3" />
             Support
           </Button>
-          <Button variant="ghost" className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-slate-800" onClick={handleLogout}>
+          <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-400 hover:bg-slate-800 hover:bg-opacity-20" onClick={handleLogout}>
             <LogOut className="h-5 w-5 mr-3" />
             Sign Out
           </Button>
@@ -89,85 +108,37 @@ const SubOwnerDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col h-full overflow-y-auto">
         {/* Header */}
-        <header className="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-900">Sub-Owner Management Portal</h1>
-            <p className="text-sm text-slate-500">{userProfile?.email || "Manager"} • Assigned units only</p>
+        <header className="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center shadow-sm shrink-0 sticky top-0 z-10">
+          <div className="font-semibold text-slate-800 text-lg md:hidden">
+            Verdant Path PG
+          </div>
+          
+          <div className="hidden md:flex ml-auto items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-sm font-bold text-slate-900">{userProfile?.displayName || "Sub-Owner"}</p>
+                <p className="text-xs text-slate-500">{userProfile?.email || "Manager Account"}</p>
+              </div>
+              <div className="h-10 w-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold relative border-2 border-white shadow-sm overflow-hidden">
+                {userProfile?.photoURL ? (
+                   <img src={userProfile.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                ) : (
+                   userProfile?.displayName?.charAt(0) || "M"
+                )}
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></div>
+              </div>
+            </div>
           </div>
           <Button variant="outline" className="md:hidden" onClick={handleLogout}>
             <LogOut className="h-4 w-4" />
           </Button>
         </header>
 
-        <div className="p-8 space-y-8 max-w-6xl mx-auto w-full">
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="border-emerald-100 shadow-sm">
-              <CardHeader className="pb-2">
-                <CardDescription>Managed Properties</CardDescription>
-                <CardTitle className="text-3xl text-slate-800">{properties.length}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm text-emerald-600 font-medium">+1 this month</div>
-              </CardContent>
-            </Card>
-            <Card className="border-emerald-100 shadow-sm">
-              <CardHeader className="pb-2">
-                <CardDescription>Total Tenants</CardDescription>
-                <CardTitle className="text-3xl text-slate-800">24</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm text-slate-500">Across all units</div>
-              </CardContent>
-            </Card>
-            <Card className="border-emerald-100 shadow-sm">
-              <CardHeader className="pb-2">
-                <CardDescription>Available Rooms</CardDescription>
-                <CardTitle className="text-3xl text-slate-800">02</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm text-amber-600 font-medium">Needs attention</div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Assigned Properties */}
-          <div>
-            <h2 className="text-xl font-bold text-slate-800 mb-4">Assigned Units</h2>
-            {properties.length === 0 ? (
-              <div className="bg-white rounded-lg border p-8 text-center">
-                <Building2 className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-slate-900">No properties assigned</h3>
-                <p className="text-slate-500 max-w-md mx-auto mt-2">
-                  You currently don't have any properties assigned to your account. 
-                  Contact the Chief Executive to have units assigned.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {properties.map(property => (
-                  <Card key={property.id} className="border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <CardTitle>{property.name}</CardTitle>
-                      <CardDescription>{property.location || "Location not specified"}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex justify-between items-center mb-4">
-                        <div className="text-sm text-slate-500">Monthly Rent</div>
-                        <div className="font-bold text-lg text-emerald-600">₹{property.price?.toLocaleString()}</div>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <div className="text-sm text-slate-500">Status</div>
-                        <div className="text-xs px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">
-                          {property.status || "Active"}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="p-4 md:p-8 space-y-8 max-w-6xl mx-auto w-full">
+           {activeTab === "overview" && <OverviewTab properties={properties} tenants={tenants} />}
+           {activeTab === "properties" && <PropertiesTab properties={properties} />}
+           {activeTab === "add_property" && <AddPropertyTab />}
+           {activeTab === "tenants" && <TenantsTab tenants={tenants} />}
         </div>
       </main>
     </div>
